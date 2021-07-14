@@ -1,8 +1,16 @@
-import { USER_LOGIN, USER_LOGIN_SUCCESS, USER_LOGIN_FAILURE, USER_REGISTER, USER_REGISTER_SUCCESS, USER_REGISTER_FAILURE } from './ActionTypes';
+import {
+  USER_LOGIN,
+  USER_LOGIN_SUCCESS,
+  USER_LOGIN_FAILURE,
+  USER_REGISTER,
+  USER_REGISTER_SUCCESS,
+  USER_REGISTER_FAILURE,
+  USER_GET_STATUS,
+  USER_GET_STATUS_SUCCESS,
+  USER_GET_STATUS_FAILURE,
+} from './ActionTypes';
 import axios from 'axios';
 import AuthService from '../services/AuthService';
-import InfoToast from '../services/toasts/InfoToasts';
-import ErrorToast from '../services/toasts/ErrorToasts';
 
 const Auth = new AuthService();
 
@@ -13,13 +21,12 @@ export function loginRequest(userId, password) {
     return axios
       .post('/auth/login', { userId: userId, password: password })
       .then((res) => {
-        InfoToast.custom.info(res.data.message, 3000);
         Auth.setToken(res.data['token']);
-        dispatch({ type: USER_LOGIN_SUCCESS, payload: res.data });
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: { user: res.data['user'] } });
       })
       .catch((err) => {
-        ErrorToast.custom.error(err.response.data['message'], 1400);
-        dispatch({ type: USER_LOGIN_FAILURE });
+        console.log(err);
+        dispatch({ type: USER_LOGIN_FAILURE, payload: { error: err.response.data['message'] } });
       });
   };
 }
@@ -35,9 +42,23 @@ export function registerRequest(data) {
         dispatch({ type: USER_REGISTER_SUCCESS });
       })
       .catch((err) => {
-        let message = err.response.data['error'];
-        ErrorToast.custom.error(message, 1400);
-        dispatch({ type: USER_REGISTER_FAILURE });
+        dispatch({ type: USER_REGISTER_FAILURE, payload: { error: err.response.data['error'] } });
+      });
+  };
+}
+
+/* GET STATUS */
+export function getStatusRequest(uid) {
+  return (dispatch) => {
+    dispatch({ type: USER_GET_STATUS });
+    return axios
+      .get(`/users/getStatus/${uid}`)
+      .then((res) => {
+        dispatch({ type: USER_GET_STATUS_SUCCESS, payload: { user: res.data['user'] } });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: USER_GET_STATUS_FAILURE, payload: { error: err.response.data['error'] } });
       });
   };
 }

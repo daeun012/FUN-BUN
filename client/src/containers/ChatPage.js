@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
 
-class ChatPage extends React.Component {
+class ChatPage extends Component {
   render() {
     return <div>hi</div>;
   }

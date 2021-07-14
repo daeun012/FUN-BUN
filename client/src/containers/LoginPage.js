@@ -1,13 +1,21 @@
 import React from 'react';
+import { withSnackbar } from 'notistack';
 import Auth from '../components/Auth';
 import { connect } from 'react-redux';
 import { loginRequest } from '../actions/auth-actions';
 
 class LoginPage extends React.Component {
-  handleLogin = (id, pw) => {
+  handleLogin = (userId, password) => {
     return this.props.loginRequest(userId, password).then(() => {
       if (this.props.status === 'SUCCESS') {
+        this.props.enqueueSnackbar('로그인 성공', {
+          variant: 'info',
+        });
         this.props.history.push('/');
+      } else {
+        this.props.enqueueSnackbar(this.props.error, {
+          variant: 'error',
+        });
       }
     });
   };
@@ -24,6 +32,7 @@ class LoginPage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     status: state.auth.login.status,
+    error: state.auth.login.error,
   };
 };
 
@@ -35,4 +44,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default withSnackbar(connect(mapStateToProps, mapDispatchToProps)(LoginPage));

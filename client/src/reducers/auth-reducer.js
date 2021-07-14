@@ -4,6 +4,7 @@ import update from 'react-addons-update';
 const initialState = {
   login: {
     status: 'INIT',
+    error: '',
   },
   register: {
     status: 'INIT',
@@ -11,10 +12,11 @@ const initialState = {
   status: {
     isLoggedIn: false,
     user: '',
+    error: '',
   },
 };
 
-export default function user(state = initialState, { type, payload }) {
+export default function auth(state = initialState, { type, payload }) {
   switch (type) {
     /* LOGIN */
     case types.USER_LOGIN:
@@ -37,6 +39,7 @@ export default function user(state = initialState, { type, payload }) {
       return update(state, {
         login: {
           status: { $set: 'FAILURE' },
+          error: { $set: payload.error },
         },
       });
 
@@ -57,8 +60,31 @@ export default function user(state = initialState, { type, payload }) {
       return update(state, {
         register: {
           status: { $set: 'FAILURE' },
+          error: { $set: payload.error },
         },
       });
+
+    /* GET STATUS */
+    case types.USER_GET_STATUS:
+      return update(state, {
+        status: {
+          isLoggedIn: { $set: true },
+        },
+      });
+    case types.USER_GET_STATUS_SUCCESS:
+      return update(state, {
+        status: {
+          user: { $set: payload.user },
+        },
+      });
+    case types.USER_GET_STATUS_FAILURE:
+      return update(state, {
+        status: {
+          isLoggedIn: { $set: false },
+          error: { $set: payload.error },
+        },
+      });
+
     default:
       return state;
   }

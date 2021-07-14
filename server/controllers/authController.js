@@ -10,13 +10,13 @@ module.exports = {
 
     if (user.error) return res.status(401).json({ message: user.error });
     else {
-      let userData = user;
+      let userData = await userService.getUserData(user._id);
       let userChats = await userService.getUserChats(user._id);
-      let countUserMessages = await userService.countUserMessges(user._id);
+      let countUserMessages = await userService.countUserMessages(user._id);
       let data = Object.assign({}, userData, { userChats, countUserMessages });
       return res.status(200).json({
         message: '로그인 성공',
-        token: jwtUtils.tokenGenerator([user._id, user.userId]),
+        token: jwtUtils.tokenGenerator([userData._id, userData.userId]),
         user: data,
       });
     }

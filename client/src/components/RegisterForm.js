@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
-import M from 'materialize-css';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import ValidateInput from '../services/ValidateInput';
+
+const styles = (theme) => ({
+  form: {
+    width: '100%', // Fix IE 11 issue.
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+});
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -88,105 +102,136 @@ class RegisterForm extends Component {
     });
   };
 
-  componentDidMount() {
-    var elems = document.querySelectorAll('select');
-    M.FormSelect.init(elems, {});
-    console.log(this.props.onRegister);
-  }
-
   render() {
+    const { classes } = this.props;
+    const depts = ['전자정보통신공학과', '컴퓨터공학과', '물리치료학과', '경제학과', '물류학과'];
+
     return (
-      <div>
-        <div className="card-content">
-          <div className="row">
-            <form onSubmit={this.handleSubmit}>
-              <div className="input-field col s12 userId">
-                <input name="userId" type="text" onChange={(e) => this.setState({ userId: e.target.value })} value={this.state.userId} onKeyUp={this.handleUserIdKeyUp} required />
-                <div className="register-error">{this.state.userIdError}</div>
-                <label>ID</label>
-              </div>
-
-              <div className="input-field col s12">
-                <input name="password" type="password" onChange={(e) => this.setState({ password: e.target.value })} value={this.state.password} onKeyUp={this.handlePasswordKeyUp} required />
-                <div className="register-error">{this.state.passwordError}</div>
-                <label>Password</label>
-              </div>
-
-              <div className="input-field col s12">
-                <input name="username" type="text" onChange={(e) => this.setState({ username: e.target.value })} value={this.state.username} onKeyUp={this.handleUsernameKeyUp} required />
-                <div className="register-error">{this.state.usernameError}</div>
-                <label>Name</label>
-              </div>
-
-              <div className="input-field col s12">
-                <input name="email" type="email" onChange={(e) => this.setState({ email: e.target.value })} value={this.state.email} onKeyUp={this.handleEmailKeyUp} required />
-                <div className="register-error">{this.state.emailError}</div>
-                <label>Email</label>
-              </div>
-
-              <div className="input-field col s12">
-                <input name="studentId" type="text" onChange={(e) => this.setState({ studentId: e.target.value })} value={this.state.studentId} onKeyUp={this.handleStudentIdKeyUp} required />
-                <div className="register-error">{this.state.studentIdError}</div>
-                <label>Student_ID : 학번</label>
-              </div>
-
-              <div className="input-field col s6 ">
-                <select defaultValue="0" onChange={(e) => this.setState({ grade: e.target.value })}>
-                  <option value="0" disabled>
-                    grade : 학년
-                  </option>
-                  <option value="1">1학년</option>
-                  <option value="2">2학년</option>
-                  <option value="3">3학년</option>
-                  <option value="4">4학년</option>
-                </select>
-              </div>
-
-              <div className="input-field col s6">
-                <select defaultValue="0" onChange={(e) => this.setState({ dept: e.target.value })}>
-                  <option value="0" disabled>
-                    dept : 학과
-                  </option>
-                  <option value="1">전자정보통신공학과</option>
-                  <option value="2">정보보안학과</option>
-                  <option value="3">컴퓨터공학과</option> <option value="4">환경공학과</option> <option value="5">경제학과</option> <option value="6">행정학과</option>
-                </select>
-              </div>
-
-              <input
-                type="submit"
-                name="submit"
-                value="CREATE"
-                className="btn auth-submit-btn"
-                disabled={
-                  !this.state.userIdValid ||
-                  !this.state.passwordValid ||
-                  !this.state.usernameValid ||
-                  !this.state.emailValid ||
-                  !this.state.studentIdValid ||
-                  this.state.grade === '' ||
-                  this.state.grade === 0 ||
-                  this.state.dept === '' ||
-                  this.state.dept === 0
-                }
-              />
-            </form>
-          </div>
-        </div>
-        <div className="footer">
-          <div className="card-content">
-            <div className="right">
-              Already have an account?
-              <NavLink to="/login" style={{ fontWeight: 'bold', color: '#7cb342' }}>
-                {' '}
-                Sing In
-              </NavLink>
-            </div>
-          </div>
-        </div>
-      </div>
+      <form className={classes.form} onSubmit={this.handleSubmit}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              label="ID"
+              name="userId"
+              onChange={(e) => this.setState({ userId: e.target.value })}
+              value={this.state.userId}
+              onKeyUp={this.handleUserIdKeyUp}
+              error={this.state.userIdError === '' ? false : true}
+              helperText={this.state.userIdError}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              autoComplete="current-password"
+              onChange={(e) => this.setState({ password: e.target.value })}
+              value={this.state.password}
+              onKeyUp={this.handlePasswordKeyUp}
+              error={this.state.passwordError === '' ? false : true}
+              helperText={this.state.passwordError}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="username"
+              label="Name"
+              onChange={(e) => this.setState({ username: e.target.value })}
+              value={this.state.username}
+              onKeyUp={this.handleUsernameKeyUp}
+              error={this.state.usernameError === '' ? false : true}
+              helperText={this.state.usernameError}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="email"
+              type="email"
+              label="Email"
+              onChange={(e) => this.setState({ email: e.target.value })}
+              value={this.state.email}
+              onKeyUp={this.handleEmailKeyUp}
+              error={this.state.emailError === '' ? false : true}
+              helperText={this.state.emailError}
+              autoComplete="email"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              name="studentId"
+              label="Student_ID : 학번"
+              onChange={(e) => this.setState({ studentId: e.target.value })}
+              value={this.state.studentId}
+              onKeyUp={this.handleStudentIdKeyUp}
+              error={this.state.studentIdError === '' ? false : true}
+              helperText={this.state.studentIdError}
+              autoComplete="email"
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField select label="grade : 학년" value={this.state.grade} onChange={(e) => this.setState({ grade: e.target.value })} variant="outlined" fullWidth required>
+              <MenuItem value="1">1학년</MenuItem>
+              <MenuItem value="2">2학년</MenuItem>
+              <MenuItem value="3">3학년</MenuItem>
+              <MenuItem value="4">4학년</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField select label="dept : 학과" value={this.state.dept} onChange={(e) => this.setState({ dept: e.target.value })} variant="outlined" fullWidth required>
+              {depts.map((option, index) => (
+                <MenuItem key={index} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+        </Grid>
+        <Button
+          className={classes.submit}
+          type="submit"
+          name="submit"
+          color="primary"
+          variant="contained"
+          fullWidth
+          disabled={
+            !this.state.userIdValid ||
+            !this.state.passwordValid ||
+            !this.state.usernameValid ||
+            !this.state.emailValid ||
+            !this.state.studentIdValid ||
+            this.state.grade === '' ||
+            this.state.dept === ''
+          }
+        >
+          Create
+        </Button>
+        <Grid container justifyContent="flex-end">
+          <Grid item>
+            Already have an account?{' '}
+            <Link component={NavLink} to="/login" variant="body2">
+              Sign in
+            </Link>
+          </Grid>
+        </Grid>
+      </form>
     );
   }
 }
 
-export default RegisterForm;
+export default withStyles(styles)(RegisterForm);

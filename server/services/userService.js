@@ -6,27 +6,38 @@ module.exports = {
   getUser: async (data) => {
     let userId = data.userId;
     let password = data.password;
-
-    let result = await User.findeOne({ userId });
-    if (result) {
-      if (!result.validateHash(password)) return { error: '잘못된 아이디 또는 패스워드입니다.' };
-      if (result.auth == 0) return { error: '인증이 완료되지 않은 계정입니다.' };
-      return result;
-    } else return { error: '잘못된 아이디 또는 패스워드입니다.' };
+    try {
+      let result = await User.findOne({ userId });
+      if (result) {
+        if (!result.validateHash(password)) return { error: '잘못된 아이디 또는 패스워드입니다.' };
+        if (result.auth == 0) return { error: '인증이 완료되지 않은 계정입니다.' };
+        return result;
+      } else return { error: '잘못된 아이디 또는 패스워드입니다.' };
+    } catch (err) {
+      console.log(err);
+      return { error: err };
+    }
   },
 
   getUserData: async (uid) => {
-    let result = await User.findeOne({ uid });
-    return result;
+    try {
+      let result = await User.findOne({ _id: uid }).lean();
+      return result;
+    } catch (err) {
+      console.log(err);
+      return { error: err };
+    }
   },
 
   getUserChats: async (uid) => {
-    let result = await Chat.find({ creator: uid }).limit(5).populate({ path: 'creator', select: 'userId username' }).sort({ createdAt: -1 });
+    let result = await Chat.find({ creator: uid }).limit(5).populate({ path: 'creator', select: 'userId username' }).sort({ createdAt: -1 }).lean();
+    console.log(result, Boolean(result));
     return result || [];
   },
 
   countUserMessages: async (uid) => {
-    let result = await Message.find({ sender: uid, statusMessage: false }).count();
+    let result = await Message.find({ sender: uid, statusMessage: false }).countDocuments();
+    console.log(result, Boolean(result));
     return result || 0;
   },
 };
