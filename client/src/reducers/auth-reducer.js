@@ -1,4 +1,4 @@
-import * as types from '../actions/ActionTypes';
+import * as types from '../constants/auth-constants';
 import update from 'react-addons-update';
 
 const initialState = {
@@ -8,6 +8,7 @@ const initialState = {
   },
   register: {
     status: 'INIT',
+    error: '',
   },
   status: {
     isLoggedIn: false,
@@ -32,7 +33,6 @@ export default function auth(state = initialState, { type, payload }) {
         },
         status: {
           isLoggedIn: { $set: true },
-          user: { $set: payload.user },
         },
       });
     case types.USER_LOGIN_FAILURE:

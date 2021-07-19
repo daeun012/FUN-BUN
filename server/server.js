@@ -6,6 +6,7 @@ const path = require('path');
 
 const authRoutes = require('./routes/authRoute');
 const userRoutes = require('./routes/userRoute');
+const chatRoutes = require('./routes/chatRoute');
 
 const port = 5000;
 http.listen(port, () => {
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // 라우트 API
 app.use('/auth/', authRoutes.router);
 app.use('/users/', userRoutes.router);
+app.use('/chat/', chatRoutes.router);
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/public/index.html'));

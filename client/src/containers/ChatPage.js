@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getAllChat, getMyChat } from '../actions/chat-actions';
+import ChatPage from '../components/ChatPage';
 
-class ChatPage extends Component {
-  render() {
-    return <div>hi</div>;
-  }
-}
+const mapStateToProps = (state) => {
+  return {
+    chat: {
+      allChat: state.chat.allChat,
+      myChat: state.chat.myChat,
+    },
+  };
+};
 
-export default ChatPage;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getAllChat: () => {
+      return dispatch(getAllChat());
+    },
+    getMyChat: (uid) => {
+      return dispatch(getMyChat(uid));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatPage);

@@ -22,8 +22,8 @@ module.exports = {
     return authorization != null ? authorization.replace('Bearer ', '') : null;
   },
 
-  getUserId: (authorization) => {
-    let userId = -1;
+  getUid: (authorization) => {
+    let uid = -1;
     let token = module.exports.parseAuthorization(authorization);
     if (token != null) {
       try {
@@ -31,7 +31,7 @@ module.exports = {
         if (jwtToken != null) userId = jwtToken.id;
       } catch (err) {}
     }
-    return userId;
+    return uid;
   },
 
   verifyToken: (token) => {

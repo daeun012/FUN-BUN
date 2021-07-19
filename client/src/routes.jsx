@@ -29,12 +29,13 @@ export default function MainRouter() {
       <SnackbarProvider maxSnack={3}>
         <Router>
           <Switch>
-            <PrivateRoute exact path="/" component={Chat} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <PrivateRoute exact path="/" component={Chat} />
+            <Route path="/chat/:chatId" component={Chat} />
           </Switch>
         </Router>
-      </SnackbarProvider>{' '}
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }

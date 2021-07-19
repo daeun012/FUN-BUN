@@ -5,7 +5,7 @@ const userService = require('../services/userService');
 module.exports = {
   getStatus: async (req, res, next) => {
     let uid = req.params.uid;
-    if (uid.error) return res.status(401).json({ message: uid.error });
+    console.log(uid.error);
 
     let userData = await userService.getUserData(uid);
     let userChats = await userService.getUserChats(uid);

@@ -1,0 +1,9 @@
+// 모든 CHAT_LIST 가져오기
+export const GET_ALL_CHAT = 'GET_ALL_CHAT';
+export const GET_ALL_CHAT_SUCCESS = 'GET_ALL_CHAT_SUCCESS';
+export const GET_ALL_CHAT_FAILURE = 'GET_ALL_CHAT_FAILURE';
+
+// 나의 CHAT_LIST 가져오기
+export const GET_MY_CHAT = 'GET_MY_CHAT';
+export const GET_MY_CHAT_SUCCESS = 'GET_MY_CHAT_SUCCESS';
+export const GET_MY_CHAT_FAILURE = 'GET_MY_CHAT_FAILURE';

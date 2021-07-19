@@ -24,9 +24,9 @@ class PrivateRoute extends React.Component {
     }
   }
   render() {
-    const { component: Component, isLoggedIn, ...rest } = this.props;
+    const { component: Component, isLoggedIn, user, ...rest } = this.props;
 
-    if (isLoggedIn) {
+    if (isLoggedIn && user) {
       return <Route {...rest} render={(props) => <Component {...props} />} />;
     } else {
       return null;
@@ -35,13 +35,14 @@ class PrivateRoute extends React.Component {
 }
 
 PrivateRoute.propTypes = {
-  component: PropTypes.func.isRequired,
+  component: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
   getStatusRequest: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   isLoggedIn: state.auth.status.isLoggedIn,
+  user: state.auth.status.user,
 });
 
 const mapDispatchToProps = (dispatch) => {

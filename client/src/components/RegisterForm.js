@@ -4,6 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import MenuItem from '@material-ui/core/MenuItem';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import ValidateInput from '../services/ValidateInput';
@@ -38,8 +42,7 @@ class RegisterForm extends Component {
       usernameValid: false,
       emailValid: false,
       studentIdValid: false,
-      responseToPost: '',
-      message: '',
+      showPassword: false,
     };
   }
 
@@ -86,6 +89,16 @@ class RegisterForm extends Component {
       studentIdError: result.studentIdError,
       studentIdValid: result.studentIdValid,
     });
+  };
+
+  handleClickShowPassword = () => {
+    this.setState({
+      showPassword: !this.state.showPassword,
+    });
+  };
+
+  handleMouseDownPassword = (event) => {
+    event.preventDefault();
   };
 
   handleSubmit = async (e) => {
@@ -137,6 +150,14 @@ class RegisterForm extends Component {
               onKeyUp={this.handlePasswordKeyUp}
               error={this.state.passwordError === '' ? false : true}
               helperText={this.state.passwordError}
+              type={this.state.showPassword ? 'text' : 'password'}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword}>
+                    {this.state.showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
             />
           </Grid>
           <Grid item xs={12}>
