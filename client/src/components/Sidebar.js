@@ -93,11 +93,10 @@ class Sidebar extends React.Component {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
-
           <CreateChatButton></CreateChatButton>
         </Toolbar>
         <Divider />
-        <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat.data : chat.allChat.data)}></ChatList>
+        <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}></ChatList>
         <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
           <Tooltip title="My Chats" arrow>
             <BottomNavigationAction icon={<RestoreIcon />} />
@@ -112,9 +111,10 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   chat: PropTypes.shape({
-    allChat: PropTypes.object,
-    myChat: PropTypes.object,
+    allChat: PropTypes.instanceOf(Array).isRequired,
+    myChat: PropTypes.instanceOf(Array).isRequired,
   }).isRequired,
 };
 

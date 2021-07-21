@@ -16,7 +16,7 @@ const messageSchema = new mongoose.Schema(
     content: String,
     statusMessage: Boolean,
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model('Message', messageSchema);

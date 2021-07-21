@@ -35,7 +35,7 @@ class LoginForm extends Component {
       <form className={classes.form} onSubmit={this.handleSubmit}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField variant="outlined" required fullWidth label="ID" name="userId" autoFocus onChange={(e) => this.setState({ userId: e.target.value })} value={this.state.userId} />{' '}
+            <TextField variant="outlined" required fullWidth label="ID" name="userId" autoFocus onChange={(e) => this.setState({ userId: e.target.value })} value={this.state.userId} />
           </Grid>
           <Grid item xs={12}>
             <TextField
@@ -45,7 +45,6 @@ class LoginForm extends Component {
               type="password"
               label="Password"
               name="password"
-              autoFocus
               autoComplete="current-password"
               onChange={(e) => this.setState({ password: e.target.value })}
               value={this.state.password}

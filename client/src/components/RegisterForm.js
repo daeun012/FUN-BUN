@@ -151,7 +151,7 @@ class RegisterForm extends Component {
               error={this.state.passwordError === '' ? false : true}
               helperText={this.state.passwordError}
               type={this.state.showPassword ? 'text' : 'password'}
-              endAdornment={
+              endadornment={
                 <InputAdornment position="end">
                   <IconButton aria-label="toggle password visibility" onClick={this.handleClickShowPassword} onMouseDown={this.handleMouseDownPassword}>
                     {this.state.showPassword ? <Visibility /> : <VisibilityOff />}

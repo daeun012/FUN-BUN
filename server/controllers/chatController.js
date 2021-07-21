@@ -1,4 +1,5 @@
 const Chat = require('../models/Chat');
+const Message = require('../models/Message');
 const jwtService = require('../services/jwtService');
 const userService = require('../services/userService');
 
@@ -51,6 +52,38 @@ module.exports = {
     } catch (err) {
       console.log(err);
       return res.status(400).json({ error: err });
+    }
+  },
+
+  getChatData: async (req, res, next) => {
+    try {
+      let chatId = req.params.id;
+      let activeChat = await Chat.findById(chatId).populate({ path: 'creator', select: 'username' }).populate({ path: 'members', select: 'username' }).lean();
+      let allMessage = await Message.find({ chatId }).populate({ path: 'sender', select: 'username' }).sort({ createdAt: 1 });
+
+      return res.status(200).json({
+        activeChat: activeChat,
+        messages: allMessage,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: err });
+    }
+  },
+
+  saveMessage: async (uid, chatId, data) => {
+    const newMessage = new Message(
+      Object.assign({}, data, {
+        chatId,
+        sender: uid,
+      })
+    );
+    try {
+      let savedMessage = await newMessage.save();
+      let message = await Message.findById(savedMessage._id).populate({ path: 'sender', select: 'username' });
+      return message;
+    } catch (err) {
+      console.log(err);
     }
   },
 };

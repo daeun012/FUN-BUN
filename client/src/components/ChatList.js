@@ -20,5 +20,9 @@ const ChatList = ({ classes, data }) => (
     {data && data.length ? data.map((chat) => <ChatListItem key={chat._id} data={chat}></ChatListItem>) : <Typography className={classes.noChat}>There are no chats yet..</Typography>}
   </List>
 );
+ChatList.propTypes = {
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  data: PropTypes.array.isRequired,
+};
 
 export default withStyles(styles)(ChatList);

@@ -1,12 +1,17 @@
 const express = require('express');
 const app = express();
-const http = require('http').Server(app);
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+const socketEevents = require('./socket/socketEvents');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 
 const authRoutes = require('./routes/authRoute');
 const userRoutes = require('./routes/userRoute');
 const chatRoutes = require('./routes/chatRoute');
+
+app.use(cors());
 
 const port = 5000;
 http.listen(port, () => {
@@ -24,6 +29,7 @@ mongoose.connect('mongodb://localhost:27017/funbun', { useNewUrlParser: true, us
 // 미들웨어
 app.use(express.json({ limit: '10mb', extended: true }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
+app.use(socketEevents(io));
 
 // 라우트 API
 app.use('/auth/', authRoutes.router);

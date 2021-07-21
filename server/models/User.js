@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
     match: { type: Boolean, default: 0 },
     auth: { type: Boolean, default: 0 },
   },
-  { timestamp: true }
+  { timestamps: true }
 );
 
 userSchema.methods.generateHash = function (password) {

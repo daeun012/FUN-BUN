@@ -5,20 +5,23 @@ import { connect } from 'react-redux';
 import { getStatusRequest } from '../actions/auth-actions';
 import AuthService from '../services/AuthService';
 
-const Auth = new AuthService();
-
 class PrivateRoute extends React.Component {
+  constructor(props) {
+    super(props);
+    this.Auth = new AuthService();
+  }
+
   componentDidMount() {
-    if (!Auth.loggedIn()) {
+    if (!this.Auth.loggedIn()) {
       this.props.history.replace('/login');
     } else {
       try {
-        const confirm = Auth.getConfirm();
+        const confirm = this.Auth.getConfirm();
         console.log('confirmation is:', confirm);
         this.props.getStatusRequest(confirm.id);
       } catch (err) {
         console.log(err);
-        Auth.logout();
+        this.Auth.logout();
         this.props.history.replace('/login');
       }
     }

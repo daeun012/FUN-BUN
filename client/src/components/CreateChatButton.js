@@ -15,8 +15,6 @@ import Button from '@material-ui/core/Button';
 import Backdrop from '@material-ui/core/Backdrop';
 import { Typography } from '@material-ui/core';
 
-const Auth = new AuthService();
-
 const styles = (theme) => ({
   modal: {
     display: 'flex',
@@ -34,13 +32,17 @@ const styles = (theme) => ({
 });
 
 class CreateChatButton extends Component {
-  state = {
-    open: false,
-    title: '',
-    desc: '',
-    titleError: '',
-    titleValid: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+      title: '',
+      desc: '',
+      titleError: '',
+      titleValid: false,
+    };
+    this.Auth = new AuthService();
+  }
 
   toggleModal = () => {
     this.setState({
@@ -82,7 +84,7 @@ class CreateChatButton extends Component {
     e.preventDefault();
     let { title, desc } = this.state;
 
-    await Axios.post(`/chat/create/${title}`, { desc, token: Auth.getToken() })
+    await Axios.post(`/chat/create/${title}`, { desc, token: this.Auth.getToken() })
       .then((res) => {
         this.props.enqueueSnackbar('채팅방 생성 완료', {
           variant: 'info',

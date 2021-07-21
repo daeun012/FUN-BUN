@@ -12,6 +12,11 @@ const initialState = {
     data: [],
     error: '',
   },
+  activeChat: {
+    status: 'INIT',
+    data: {},
+    error: '',
+  },
 };
 
 export default function chat(state = initialState, { type, payload }) {
@@ -55,6 +60,28 @@ export default function chat(state = initialState, { type, payload }) {
     case types.GET_MY_CHAT_FAILURE:
       return update(state, {
         myChat: {
+          status: { $set: 'FAILURE' },
+          error: { $set: payload.error },
+        },
+      });
+
+    /* GET ACTIVE CHAT */
+    case types.GET_ACTIVE_CHAT:
+      return update(state, {
+        activeChat: {
+          status: { $set: 'WAITING' },
+        },
+      });
+    case types.GET_ACTIVE_CHAT_SUCCESS:
+      return update(state, {
+        activeChat: {
+          status: { $set: 'SUCCESS' },
+          data: { $set: payload.activeChat },
+        },
+      });
+    case types.GET_ACTIVE_CHAT_FAILURE:
+      return update(state, {
+        activeChat: {
           status: { $set: 'FAILURE' },
           error: { $set: payload.error },
         },

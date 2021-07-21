@@ -1,8 +1,5 @@
 import * as types from '../constants/chat-constants';
 import axios from 'axios';
-import AuthService from '../services/AuthService';
-
-const Auth = new AuthService();
 
 export function getAllChat() {
   return (dispatch) => {
@@ -18,9 +15,8 @@ export function getAllChat() {
   };
 }
 
-export function getMyChat() {
+export function getMyChat(uid) {
   return (dispatch) => {
-    const uid = Auth.getConfirm()['id'];
     dispatch({ type: types.GET_MY_CHAT });
     return axios
       .get(`/chat/mychat/${uid}`)
@@ -30,6 +26,21 @@ export function getMyChat() {
       .catch((err) => {
         console.log(err);
         dispatch({ type: types.GET_MY_CHAT_FAILURE, payload: { error: err.response.data['error'] } });
+      });
+  };
+}
+
+export function getActiveChat(chatId) {
+  return (dispatch) => {
+    dispatch({ type: types.GET_ACTIVE_CHAT });
+    return axios
+      .get(`/chat/${chatId}`)
+      .then((res) => {
+        dispatch({ type: types.GET_ACTIVE_CHAT_SUCCESS, payload: { activeChat: res.data['activeChat'], messages: res.data['messages'] } });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({ type: types.GET_ACTIVE_CHAT_FAILURE, payload: { error: err.response.data['error'] } });
       });
   };
 }
