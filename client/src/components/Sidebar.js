@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ChatList from './ChatList';
 import CreateChatButton from './CreateChatButton';
 import { alpha, withStyles } from '@material-ui/core/styles';
+import Hidden from '@material-ui/core/Hidden';
 import Drawer from '@material-ui/core/Drawer';
 import SearchIcon from '@material-ui/icons/Search';
 import Divider from '@material-ui/core/Divider';
@@ -15,11 +16,10 @@ import ForumIcon from '@material-ui/icons/Forum';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = (theme) => ({
-  drawerPaper: {
-    position: 'relative',
-    height: '100%',
-    width: 320,
+  drawer: {
+    [theme.breakpoints.up('md')]: { width: 320, flexShrink: 0 },
   },
+
   search: {
     position: 'relative',
     borderRadius: theme.shape.borderRadius,
@@ -27,7 +27,7 @@ const styles = (theme) => ({
     '&:hover': {
       backgroundColor: alpha(theme.palette.primary.main, 0.25),
     },
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(1),
     marginLeft: 0,
   },
   searchIcon: {
@@ -72,46 +72,97 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    const { classes, chat } = this.props;
+    const { classes, window, chat, handleSideBar, open } = this.props;
     const { activeTab, searchValue } = this.state;
 
+    const container = window !== undefined ? () => window().document.body : undefined;
+
     return (
-      <Drawer variant="permanent" className={classes.drawerPaper}>
-        <Toolbar>
-          <div className={classes.search} edge="start">
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="검색..."
-              value={searchValue}
-              onChange={this.handleSearchChange}
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <CreateChatButton></CreateChatButton>
-        </Toolbar>
-        <Divider />
-        <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}></ChatList>
-        <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
-          <Tooltip title="My Chats" arrow>
-            <BottomNavigationAction icon={<RestoreIcon />} />
-          </Tooltip>
-          <Tooltip title="Explore" arrow>
-            <BottomNavigationAction icon={<ForumIcon />} />
-          </Tooltip>
-        </BottomNavigation>
-      </Drawer>
+      <nav className={classes.drawer}>
+        <Hidden smUp implementation="css">
+          <Drawer
+            classes={{ paper: classes.drawerPaper }}
+            container={container}
+            variant="temporary"
+            anchor="left"
+            open={open}
+            onClose={handleSideBar}
+            ModalProps={{
+              keepMounted: true, // Better open performance on mobile.
+            }}
+          >
+            <Toolbar>
+              <div className={classes.search} edge="start">
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="검색..."
+                  value={searchValue}
+                  onChange={this.handleSearchChange}
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </div>
+              <CreateChatButton></CreateChatButton>
+            </Toolbar>
+            <Divider />
+            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}></ChatList>
+            <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
+              <Tooltip title="My Chats" arrow>
+                <BottomNavigationAction icon={<RestoreIcon />} />
+              </Tooltip>
+              <Tooltip title="Explore" arrow>
+                <BottomNavigationAction icon={<ForumIcon />} />
+              </Tooltip>
+            </BottomNavigation>
+          </Drawer>
+        </Hidden>
+        <Hidden mdDown implementation="css">
+          <Drawer classes={{ paper: classes.drawerPaper }} variant="permanent" open>
+            <Toolbar>
+              <div className={classes.search} edge="start">
+                <div className={classes.searchIcon}>
+                  <SearchIcon />
+                </div>
+                <InputBase
+                  placeholder="검색..."
+                  value={searchValue}
+                  onChange={this.handleSearchChange}
+                  classes={{
+                    root: classes.inputRoot,
+                    input: classes.inputInput,
+                  }}
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </div>
+              <CreateChatButton></CreateChatButton>
+            </Toolbar>
+            <Divider />
+            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}></ChatList>
+            <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
+              <Tooltip title="My Chats" arrow>
+                <BottomNavigationAction icon={<RestoreIcon />} />
+              </Tooltip>
+              <Tooltip title="Explore" arrow>
+                <BottomNavigationAction icon={<ForumIcon />} />
+              </Tooltip>
+            </BottomNavigation>
+          </Drawer>
+        </Hidden>
+      </nav>
     );
   }
 }
 
 Sidebar.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  window: PropTypes.func,
+  open: PropTypes.bool.isRequired,
+  handleSideBar: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,

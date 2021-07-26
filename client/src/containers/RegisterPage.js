@@ -2,7 +2,7 @@ import React from 'react';
 import { withSnackbar } from 'notistack';
 import Auth from '../components/Auth';
 import { connect } from 'react-redux';
-import { registerRequest } from '../actions/auth-actions';
+import { registerRequest } from '../actions/user-actions';
 
 class RegisterPage extends React.Component {
   handleRegister = (data) => {
@@ -29,8 +29,8 @@ class RegisterPage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    status: state.auth.register.status,
-    error: state.auth.register.error,
+    status: state.services.isStatus.register,
+    error: state.services.errors.user,
   };
 };
 

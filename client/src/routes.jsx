@@ -2,6 +2,7 @@
 import React from 'react';
 import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { withStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './containers/PrivateRoute';
@@ -22,19 +23,28 @@ const theme = createTheme({
   },
 });
 
-export default function MainRouter() {
-  return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <SnackbarProvider maxSnack={3}>
-        <Router>
+const styles = () => ({
+  root: {
+    display: 'flex',
+    height: '100%',
+    width: '100%',
+  },
+});
+const MainRouter = ({ classes }) => (
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <SnackbarProvider maxSnack={3}>
+      <Router>
+        <div className={classes.root}>
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <PrivateRoute exact path={['/', '/chat/:chatId']} component={Chat} />
           </Switch>
-        </Router>
-      </SnackbarProvider>
-    </ThemeProvider>
-  );
-}
+        </div>
+      </Router>
+    </SnackbarProvider>
+  </ThemeProvider>
+);
+
+export default withStyles(styles)(MainRouter);

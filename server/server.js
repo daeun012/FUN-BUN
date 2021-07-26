@@ -7,7 +7,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const path = require('path');
 
-const authRoutes = require('./routes/authRoute');
 const userRoutes = require('./routes/userRoute');
 const chatRoutes = require('./routes/chatRoute');
 
@@ -24,7 +23,7 @@ db.on('error', console.error);
 db.once('open', () => {
   console.log('Connected to mongod server');
 });
-mongoose.connect('mongodb://localhost:27017/funbun', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/funbun', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true });
 
 // 미들웨어
 app.use(express.json({ limit: '10mb', extended: true }));
@@ -32,7 +31,7 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(socketEevents(io));
 
 // 라우트 API
-app.use('/auth/', authRoutes.router);
+
 app.use('/users/', userRoutes.router);
 app.use('/chat/', chatRoutes.router);
 

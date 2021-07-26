@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
-import authReducer from './auth-reducer';
+import userReducer from './user-reducer';
 import chatReducer from './chat-reducer';
 import messagesReducer from './messages-reducer';
+import servicesReducer from './services-reducer';
 const rootReducer = combineReducers({
-  auth: authReducer,
+  user: userReducer,
   chat: chatReducer,
   messages: messagesReducer,
+  services: servicesReducer,
 });
 
 export default rootReducer;

@@ -9,10 +9,18 @@ import AuthService from '../services/AuthService';
 class ChatPage extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      sideBarOpen: false,
+    };
     this.Auth = new AuthService();
   }
+
+  handleSideBarToggle = () => {
+    this.setState({ sideBarOpen: !this.state.sideBarOpen });
+  };
+
   componentDidMount() {
-    const { match, getAllChat, getMyChat, socketConnect, getActiveChat } = this.props;
+    const { match, getAllChat, getMyChat, socketConnect, getActiveChat, mountChat } = this.props;
     Promise.all([getAllChat(), getMyChat(this.Auth.getConfirm()['id'])])
       .then(() => {
         socketConnect(this.Auth.getToken());
@@ -21,6 +29,7 @@ class ChatPage extends Component {
         const { chatId } = match.params;
         if (chatId) {
           getActiveChat(chatId);
+          mountChat(chatId);
         }
       });
   }
@@ -29,26 +38,26 @@ class ChatPage extends Component {
     const {
       match: { params },
       getActiveChat,
-      leaveChat,
-      joinChat,
+      umountChat,
+      mountChat,
     } = this.props;
     const { params: prevParams } = prevProps.match;
 
     if (prevParams.chatId !== params.chatId) {
       getActiveChat(params.chatId);
-      leaveChat(prevParams.chatId);
-      joinChat(params.chatId);
+      umountChat(prevParams.chatId);
+      mountChat(params.chatId);
     }
   }
 
   render() {
-    const { chat, user, messages, sendMessage } = this.props;
-    console.log(messages);
+    const { chat, user, messages, sendMessage, joinChat } = this.props;
+
     return (
       <React.Fragment>
-        <ChatHeader />
-        <Sidebar chat={chat} />
-        <Chat activeChat={chat.activeChat} messages={messages} user={user} sendMessage={sendMessage}></Chat>
+        <ChatHeader handleSideBar={this.handleSideBarToggle} />
+        <Sidebar chat={chat} handleSideBar={this.handleSideBarToggle} open={this.state.sideBarOpen} />
+        <Chat activeChat={chat.activeChat} messages={messages} user={user} sendMessage={sendMessage} joinChat={joinChat}></Chat>
       </React.Fragment>
     );
   }
@@ -57,9 +66,10 @@ ChatPage.propTypes = {
   getMyChat: PropTypes.func.isRequired,
   getAllChat: PropTypes.func.isRequired,
   getActiveChat: PropTypes.func.isRequired,
-  leaveChat: PropTypes.func.isRequired,
-  joinChat: PropTypes.func.isRequired,
+  umountChat: PropTypes.func.isRequired,
+  mountChat: PropTypes.func.isRequired,
   sendMessage: PropTypes.func.isRequired,
+  joinChat: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,

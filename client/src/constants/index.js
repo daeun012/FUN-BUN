@@ -1,3 +1,3 @@
 export * from './chat-constants';
-export * from './auth-constants';
+export * from './user-constants';
 export * from './socket-constants';

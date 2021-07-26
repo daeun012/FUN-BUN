@@ -1,4 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
-  overflow-x: hidden;
-  font-family: 'Noto Sans HK', sans-serif;
+  margin: 0;
+  padding: 0;
 }

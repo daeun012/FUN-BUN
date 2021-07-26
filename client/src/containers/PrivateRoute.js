@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { getStatusRequest } from '../actions/auth-actions';
+import { getUserDataRequest } from '../actions/user-actions';
 import AuthService from '../services/AuthService';
 
 class PrivateRoute extends React.Component {
@@ -18,7 +18,7 @@ class PrivateRoute extends React.Component {
       try {
         const confirm = this.Auth.getConfirm();
         console.log('confirmation is:', confirm);
-        this.props.getStatusRequest(confirm.id);
+        this.props.getUserDataRequest(confirm.id);
       } catch (err) {
         console.log(err);
         this.Auth.logout();
@@ -40,18 +40,18 @@ class PrivateRoute extends React.Component {
 PrivateRoute.propTypes = {
   component: PropTypes.object.isRequired,
   isLoggedIn: PropTypes.bool.isRequired,
-  getStatusRequest: PropTypes.func.isRequired,
+  getUserDataRequest: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isLoggedIn: state.auth.status.isLoggedIn,
-  user: state.auth.status.user,
+  isLoggedIn: state.user.isLoggedIn,
+  user: state.user.userData,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getStatusRequest: (uid) => {
-      return dispatch(getStatusRequest(uid));
+    getUserDataRequest: (uid) => {
+      return dispatch(getUserDataRequest(uid));
     },
   };
 };

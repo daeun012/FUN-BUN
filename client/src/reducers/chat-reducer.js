@@ -1,93 +1,46 @@
-import * as types from '../constants/chat-constants';
+import { combineReducers } from 'redux';
 import update from 'react-addons-update';
+import * as types from '../constants';
 
 const initialState = {
-  allChat: {
-    status: 'INIT',
-    data: [],
-    error: '',
-  },
-  myChat: {
-    status: 'INIT',
-    data: [],
-    error: '',
-  },
-  activeChat: {
-    status: 'INIT',
-    data: {},
-    error: '',
-  },
+  allChat: [],
+  myChat: [],
+  activeChat: {},
 };
 
-export default function chat(state = initialState, { type, payload }) {
+const allChat = (state = initialState.allChat, { type, payload }) => {
   switch (type) {
-    /* GET ALL CHAT */
-    case types.GET_ALL_CHAT:
-      return update(state, {
-        allChat: {
-          status: { $set: 'WAITING' },
-        },
-      });
     case types.GET_ALL_CHAT_SUCCESS:
-      return update(state, {
-        allChat: {
-          status: { $set: 'SUCCESS' },
-          data: { $set: payload.allChat },
-        },
-      });
-    case types.GET_ALL_CHAT_FAILURE:
-      return update(state, {
-        allChat: {
-          status: { $set: 'FAILURE' },
-          error: { $set: payload.error },
-        },
-      });
-
-    /* GET MY CHAT */
-    case types.GET_MY_CHAT:
-      return update(state, {
-        myChat: {
-          status: { $set: 'WAITING' },
-        },
-      });
-    case types.GET_MY_CHAT_SUCCESS:
-      return update(state, {
-        myChat: {
-          status: { $set: 'SUCCESS' },
-          data: { $set: payload.myChat },
-        },
-      });
-    case types.GET_MY_CHAT_FAILURE:
-      return update(state, {
-        myChat: {
-          status: { $set: 'FAILURE' },
-          error: { $set: payload.error },
-        },
-      });
-
-    /* GET ACTIVE CHAT */
-    case types.GET_ACTIVE_CHAT:
-      return update(state, {
-        activeChat: {
-          status: { $set: 'WAITING' },
-        },
-      });
-    case types.GET_ACTIVE_CHAT_SUCCESS:
-      return update(state, {
-        activeChat: {
-          status: { $set: 'SUCCESS' },
-          data: { $set: payload.activeChat },
-        },
-      });
-    case types.GET_ACTIVE_CHAT_FAILURE:
-      return update(state, {
-        activeChat: {
-          status: { $set: 'FAILURE' },
-          error: { $set: payload.error },
-        },
-      });
-
+      return update(state, { $set: payload.allChat });
     default:
       return state;
   }
-}
+};
+
+const myChat = (state = initialState.myChat, { type, payload }) => {
+  switch (type) {
+    case types.GET_MY_CHAT_SUCCESS:
+      return update(state, { $set: payload.myChat });
+    case types.JOIN_CHAT_SUCCESS:
+      return update(state, { $push: [payload.chat] });
+    default:
+      return state;
+  }
+};
+
+const activeChat = (state = initialState.activeChat, { type, payload }) => {
+  switch (type) {
+    case types.GET_ACTIVE_CHAT_SUCCESS:
+      return update(state, { $set: payload.activeChat });
+    case types.JOIN_CHAT_SUCCESS:
+      return update(state, { $set: payload.chat });
+    default:
+      return state;
+  }
+};
+
+export default combineReducers({
+  allChat,
+  myChat,
+  activeChat,
+});

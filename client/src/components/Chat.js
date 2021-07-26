@@ -6,26 +6,22 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = () => ({
   chatLayout: {
-    display: 'flex',
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: '64px',
-    heigth: '100%',
-    width: '100%',
-    overflow: 'hidden',
   },
 });
-const Chat = ({ classes, user, messages, sendMessage }) => (
+const Chat = ({ classes, user, messages, activeChat, sendMessage, joinChat }) => (
   <main className={classes.chatLayout}>
-    <div>
-      <ChatMessageList user={user} messages={messages}></ChatMessageList>
-      <MessageInput sendMessage={sendMessage}></MessageInput>
-    </div>
+    <ChatMessageList user={user} messages={messages}></ChatMessageList>
+    <MessageInput showJoinButton={!(user.isMember || user.isCreator)} sendMessage={sendMessage} onJoinButtonClick={() => joinChat(activeChat._id)}></MessageInput>
   </main>
 );
 
 Chat.propTypes = {
   sendMessage: PropTypes.func.isRequired,
+  joinChat: PropTypes.func.isRequired,
   activeChat: PropTypes.object.isRequired,
   user: PropTypes.shape({
     isMember: PropTypes.bool.isRequired,

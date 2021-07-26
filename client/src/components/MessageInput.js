@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { alpha, withStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 
 import Button from '@material-ui/core/Button';
@@ -9,16 +9,14 @@ import Grid from '@material-ui/core/Grid';
 
 const styles = (theme) => ({
   messageInputWrapper: {
-    position: 'fixed',
-    right: 0,
-    bottom: 0,
-    width: 'calc(100% - 320px)',
-    marginLeft: '320px',
     backgroundColor: theme.palette.action.selected,
+  },
+  joinButton: {
+    padding: theme.spacing(2),
   },
   messageForm: {
     padding: theme.spacing(2),
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   messageInput: {
     position: 'relative',
@@ -31,6 +29,7 @@ const styles = (theme) => ({
     paddingLeft: `calc(1em + ${theme.spacing(1)}px)`,
   },
 });
+
 class MessageInput extends Component {
   state = {
     value: '',
@@ -50,38 +49,46 @@ class MessageInput extends Component {
       value: '',
     });
   };
+
   render() {
-    const { classes } = this.props;
+    const { classes, showJoinButton, onJoinButtonClick } = this.props;
     return (
       <div className={classes.messageInputWrapper}>
-        <form className={classes.messageForm} onSubmit={this.handleSubmit}>
-          <Grid container spacing={2}>
-            <Grid item xs={9}>
-              <div className={classes.messageInput}>
-                <InputBase
-                  fullWidth
-                  value={this.state.value}
-                  onChange={this.handleValueChange}
-                  placeholder="Write your message"
-                  classes={{
-                    input: classes.inputInput,
-                  }}
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </div>
+        {showJoinButton ? (
+          <Button fullWidth color="primary" size="large" onClick={onJoinButtonClick}>
+            Join
+          </Button>
+        ) : (
+          <form className={classes.messageForm} onSubmit={this.handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={9}>
+                <div className={classes.messageInput}>
+                  <InputBase
+                    fullWidth
+                    value={this.state.value}
+                    onChange={this.handleValueChange}
+                    placeholder="Write your message"
+                    classes={{
+                      input: classes.inputInput,
+                    }}
+                    inputProps={{ 'aria-label': 'search' }}
+                  />
+                </div>
+              </Grid>
+              <Grid item xs={3}>
+                <Button fullWidth variant="contained" color="primary" endIcon={<SendIcon />} size="large" type="submit">
+                  send
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={3}>
-              <Button fullWidth variant="contained" color="primary" endIcon={<SendIcon />} size="large" type="submit">
-                send
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+        )}{' '}
       </div>
     );
   }
 }
 MessageInput.propTypes = {
-  sendMessage: PropTypes.func.isRequired,
+  showJoinButton: PropTypes.bool.isRequired,
+  onJoinButtonClick: PropTypes.func.isRequired,
 };
 export default withStyles(styles)(MessageInput);

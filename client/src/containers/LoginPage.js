@@ -2,7 +2,7 @@ import React from 'react';
 import { withSnackbar } from 'notistack';
 import Auth from '../components/Auth';
 import { connect } from 'react-redux';
-import { loginRequest } from '../actions/auth-actions';
+import { loginRequest } from '../actions/user-actions';
 
 class LoginPage extends React.Component {
   handleLogin = (userId, password) => {
@@ -31,8 +31,8 @@ class LoginPage extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    status: state.auth.login.status,
-    error: state.auth.login.error,
+    status: state.services.isStatus.login,
+    error: state.services.errors.user,
   };
 };
 

@@ -3,7 +3,7 @@ export default {
     isMember: (user, activeChat) => {
       try {
         return activeChat.members.some((member) => member._id === user._id);
-      } catch (e) {
+      } catch (err) {
         return false;
       }
     },
@@ -11,7 +11,7 @@ export default {
     isCreator: (user, activeChat) => {
       try {
         return activeChat.creator._id === user._id;
-      } catch (e) {
+      } catch (err) {
         return false;
       }
     },

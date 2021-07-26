@@ -1,5 +1,8 @@
 import * as types from '../constants/chat-constants';
 import axios from 'axios';
+import AuthService from '../services/AuthService';
+
+const Auth = new AuthService();
 
 export function getAllChat() {
   return (dispatch) => {
@@ -34,7 +37,7 @@ export function getActiveChat(chatId) {
   return (dispatch) => {
     dispatch({ type: types.GET_ACTIVE_CHAT });
     return axios
-      .get(`/chat/${chatId}`)
+      .get(`/chat/data/${chatId}`)
       .then((res) => {
         dispatch({ type: types.GET_ACTIVE_CHAT_SUCCESS, payload: { activeChat: res.data['activeChat'], messages: res.data['messages'] } });
       })
