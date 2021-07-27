@@ -1,6 +1,6 @@
 const jwtService = require('../services/jwtService');
 const { saveMessage } = require('../controllers/messageController');
-const { updateChat } = require('../controllers/chatController');
+const { updateChat, createChat } = require('../controllers/chatController');
 const chatService = require('../services/chatService');
 
 function socketAuth(socket, next) {
@@ -41,16 +41,33 @@ function socketEevents(io) {
         let checkJoin = await chatService.checkJoin(socket.uid, chat);
         if (checkJoin.error) throw checkJoin.error;
 
-        chat = await updateChat(socket.uid, chatId);
+        let updatedChat = await updateChat(socket.uid, chatId);
         let statusMessage = await saveMessage(socket.uid, chatId, { content: '님이 입장하셨습니다.', statusMessage: true });
 
-        console.log('joinGroup data=>', chat, 'time=>', new Date().toLocaleString());
+        console.log('joinChat data=>', updatedChat, 'time=>', new Date().toLocaleString());
 
         io.to(chatId).emit('newMessage', statusMessage);
 
-        fn(chat);
+        fn(updatedChat);
       } catch (err) {
         socket.emit('error', { type: 'JOIN_CHAT_FAILURE', message: err.message });
+      }
+    });
+
+    socket.on('createChat', async (title, desc, fn) => {
+      try {
+        let createdChat = await createChat(socket.uid, title, desc);
+
+        let chat = await chatService.getChat(createdChat._id);
+        if (chat.error) throw chat.error;
+
+        console.log('createChat data=>', chat, 'time=>', new Date().toLocaleString());
+
+        io.emit('newChat', chat);
+
+        fn(chat);
+      } catch (err) {
+        socket.emit('error', { type: 'CREATE_CHAT_FAILURE', message: err.message });
       }
     });
 

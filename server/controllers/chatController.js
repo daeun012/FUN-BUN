@@ -6,28 +6,6 @@ const { saveMessage } = require('../controllers/messageController');
 const messageController = require('../controllers/messageController');
 
 module.exports = {
-  createChat: async (req, res, next) => {
-    let title = req.params.title;
-    let desc = req.body.desc;
-    var uid = jwtService.verifyToken(req.body['token'])['id'];
-
-    const newChat = new Chat({
-      creator: uid,
-      title,
-      description: desc,
-    });
-
-    try {
-      let chat = await newChat.save();
-      /*   let allChat = await Chat.find().populate({ path: 'creator', select: 'username' }).populate({ path: 'members', select: 'username' }).lean();
-      return res.status(200).json({
-        allChat: allChat,
-      }); */
-    } catch (err) {
-      console.log(err);
-    }
-  },
-
   getAllChatList: async (req, res, next) => {
     try {
       let allChat = await Chat.find().populate({ path: 'creator', select: 'username' }).populate({ path: 'members', select: 'username' }).lean();
@@ -76,29 +54,27 @@ module.exports = {
 
   updateChat: async (uid, chatId) => {
     try {
-      /*    let chatId = req.params.id;
-      let uid = jwtService.verifyToken(req.body['token'])['id'];
-
-      // 존재하고 있는 채팅방인지 확인
-      let chat = await chatService.getChat(chatId);
-      if (chat.error) throw chat.error;
-
-      // 이미 참여하고 있는 채팅방인지 확인
-      let checkJoin = await chatService.checkJoin(chat);
-      if (checkJoin.error) throw checkJoin.error;
- */
       let result = await Chat.findOneAndUpdate({ _id: chatId }, { $push: { members: uid } }, { new: true })
         .populate({ path: 'creator', select: 'username' })
         .populate({ path: 'members', select: 'username' })
         .lean();
 
-      /*  let statusMessage = await saveMessage(uid, chatId, {
-        content: ' 입장하셨습니다.',
-        statusMessage: true,
-      }); */
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
+  },
 
-      /*   res.io.to(chatId).emit('newMessage', statusMessage); */
+  createChat: async (uid, title, desc) => {
+    try {
+      const newChat = new Chat({
+        creator: uid,
+        title,
+        description: desc,
+        members: uid,
+      });
 
+      let result = await newChat.save();
       return result;
     } catch (err) {
       console.log(err);

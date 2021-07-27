@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { getActiveChat } from '../actions/chat-actions';
 
 const styles = (theme) => ({
   selected: {
@@ -12,8 +13,8 @@ const styles = (theme) => ({
   },
 });
 
-const ChatListItem = ({ classes, match, data }) => (
-  <ListItem button component={Link} to={`/chat/${data._id}`} className={match.params.chatId === data._id ? classes.selected : ''}>
+const ChatListItem = ({ classes, data, selected }) => (
+  <ListItem button component={Link} to={`/chat/${data._id}`} className={selected ? classes.selected : ''}>
     <ListItemText primary={data.title} secondary={data.description}></ListItemText>
   </ListItem>
 );
@@ -21,6 +22,7 @@ const ChatListItem = ({ classes, match, data }) => (
 ChatListItem.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   data: PropTypes.object.isRequired,
+  selected: PropTypes.bool.isRequired,
 };
 
 export default withRouter(withStyles(styles)(ChatListItem));

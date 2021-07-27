@@ -17,6 +17,11 @@ export default function user(state = initialState, { type, payload }) {
     case types.GET_USER_DATA_FAILURE:
       return update(state, { isLoggedIn: { $set: false } });
 
+    case types.USER_LOGOUT:
+      return update(state, {
+        isLoggedIn: { $set: false },
+        userData: { $set: '' },
+      });
     default:
       return state;
   }

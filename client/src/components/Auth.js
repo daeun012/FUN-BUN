@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import LoginForm from './LoginForm';
+import RegisterForm from './RegisterForm';
+import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
-import { withStyles } from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
+import Grid from '@material-ui/core/Grid';
 
 const styles = (theme) => ({
   paper: {

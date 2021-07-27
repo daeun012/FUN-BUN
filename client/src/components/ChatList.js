@@ -15,14 +15,19 @@ const styles = () => ({
   },
 });
 
-const ChatList = ({ classes, data }) => (
+const ChatList = ({ classes, data, activeChat }) => (
   <List className={classes.chatList}>
-    {data && data.length ? data.map((chat) => <ChatListItem key={chat._id} data={chat}></ChatListItem>) : <Typography className={classes.noChat}>There are no chats yet..</Typography>}
+    {data && data.length ? (
+      data.map((chat) => <ChatListItem key={chat._id} data={chat} selected={Boolean(activeChat && activeChat._id === chat._id)}></ChatListItem>)
+    ) : (
+      <Typography className={classes.noChat}>There are no chats yet..</Typography>
+    )}
   </List>
 );
 ChatList.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   data: PropTypes.array.isRequired,
+  activeChat: PropTypes.instanceOf(Object).isRequired,
 };
 
 export default withStyles(styles)(ChatList);

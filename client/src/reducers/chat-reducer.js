@@ -12,6 +12,8 @@ const allChat = (state = initialState.allChat, { type, payload }) => {
   switch (type) {
     case types.GET_ALL_CHAT_SUCCESS:
       return update(state, { $set: payload.allChat });
+    case types.RECIEVE_NEW_CHAT:
+      return update(state, { $push: [payload.chat] });
     default:
       return state;
   }
@@ -22,6 +24,7 @@ const myChat = (state = initialState.myChat, { type, payload }) => {
     case types.GET_MY_CHAT_SUCCESS:
       return update(state, { $set: payload.myChat });
     case types.JOIN_CHAT_SUCCESS:
+    case types.CREATE_CHAT_SUCCESS:
       return update(state, { $push: [payload.chat] });
     default:
       return state;

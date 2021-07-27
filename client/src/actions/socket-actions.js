@@ -1,5 +1,6 @@
 import * as types from '../constants/socket-constants';
 import io from 'socket.io-client';
+import history from '../utils/history';
 
 let socket;
 
@@ -23,6 +24,9 @@ export function socketConnect(token) {
     socket.on('newMessage', (message) => {
       dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
     });
+    socket.on('newChat', (chat) => {
+      dispatch({ type: types.RECIEVE_NEW_CHAT, payload: { chat } });
+    });
   };
 }
 
@@ -33,8 +37,23 @@ export function joinChat(chatId) {
       try {
         console.log(chat);
         dispatch({ type: types.JOIN_CHAT_SUCCESS, payload: { chat } });
+        history.push(`/chat/${chat._id}`);
       } catch (err) {
         dispatch({ type: types.JOIN_CHAT_FAILURE, payload: { error: error.message } });
+      }
+    });
+  };
+}
+
+export function createChat(title, desc) {
+  return (dispatch) => {
+    dispatch({ type: types.CREATE_CHAT });
+    socket.emit('createChat', title, desc, (chat) => {
+      try {
+        dispatch({ type: types.CREATE_CHAT_SUCCESS, payload: { chat } });
+        history.push(`/chat/${chat._id}`);
+      } catch (err) {
+        dispatch({ type: types.CREATE_CHAT_FAILURE, payload: { error: error.message } });
       }
     });
   };
@@ -63,7 +82,7 @@ export function umountChat(chatId) {
   return (dispatch) => {
     socket.emit('umountChat', chatId);
     dispatch({
-      type: types.LEAVE_CHAT,
+      type: types.UMOUNT_CHAT,
       payload: { chatId },
     });
   };
@@ -73,7 +92,7 @@ export function mountChat(chatId) {
   return (dispatch) => {
     socket.emit('mountChat', chatId);
     dispatch({
-      type: types.JOIN_CHAT,
+      type: types.MOUNT_CHAT,
       payload: { chatId },
     });
   };

@@ -82,20 +82,11 @@ class CreateChatButton extends Component {
 
   handleCreate = async (e) => {
     e.preventDefault();
+
     let { title, desc } = this.state;
 
-    await Axios.post(`/chat/create/${title}`, { desc, token: this.Auth.getToken() })
-      .then((res) => {
-        this.props.enqueueSnackbar('채팅방 생성 완료', {
-          variant: 'info',
-        });
-        this.props.history.push('/');
-      })
-      .catch((err) => {
-        this.props.enqueueSnackbar(err.response.data['error'], {
-          variant: 'error',
-        });
-      });
+    this.props.createChat(title, desc);
+    this.toggleModal();
   };
 
   render() {
@@ -149,5 +140,7 @@ class CreateChatButton extends Component {
     );
   }
 }
-
+CreateChatButton.propTypes = {
+  createChat: PropTypes.func.isRequired,
+};
 export default withSnackbar(withStyles(styles)(CreateChatButton));

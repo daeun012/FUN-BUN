@@ -9,7 +9,6 @@ module.exports = {
       if (!result) throw new Error('채팅방을 찾을 수 없습니다.');
       return result;
     } catch (err) {
-      console.log(err);
       return { error: err };
     }
   },
@@ -23,7 +22,6 @@ module.exports = {
       }
       return { status: 'valid' };
     } catch (err) {
-      console.log(err);
       return { error: err };
     }
   },

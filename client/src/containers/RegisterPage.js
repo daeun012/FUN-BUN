@@ -19,11 +19,7 @@ class RegisterPage extends React.Component {
   };
 
   render() {
-    return (
-      <div>
-        <Auth mode={false} onRegister={this.handleRegister} />
-      </div>
-    );
+    return <Auth mode={false} onRegister={this.handleRegister} />;
   }
 }
 

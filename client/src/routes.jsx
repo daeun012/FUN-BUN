@@ -1,10 +1,11 @@
 // 경로 설정
 import React from 'react';
+import { Router, Switch, Route } from 'react-router-dom';
+import history from './utils/history';
 import { SnackbarProvider } from 'notistack';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { withStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import PrivateRoute from './containers/PrivateRoute';
 import Login from './containers/LoginPage';
 import Register from './containers/RegisterPage';
@@ -34,7 +35,7 @@ const MainRouter = ({ classes }) => (
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <SnackbarProvider maxSnack={3}>
-      <Router>
+      <Router history={history}>
         <div className={classes.root}>
           <Switch>
             <Route path="/login" component={Login} />

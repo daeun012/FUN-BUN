@@ -72,7 +72,7 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    const { classes, window, chat, handleSideBar, open } = this.props;
+    const { classes, window, chat, handleSideBar, open, createChat } = this.props;
     const { activeTab, searchValue } = this.state;
 
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -107,10 +107,10 @@ class Sidebar extends React.Component {
                   inputProps={{ 'aria-label': 'search' }}
                 />
               </div>
-              <CreateChatButton></CreateChatButton>
+              <CreateChatButton createChat={createChat}></CreateChatButton>
             </Toolbar>
             <Divider />
-            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}></ChatList>
+            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)} activeChat={chat.activeChat}></ChatList>
             <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
               <Tooltip title="My Chats" arrow>
                 <BottomNavigationAction icon={<RestoreIcon />} />
@@ -121,7 +121,7 @@ class Sidebar extends React.Component {
             </BottomNavigation>
           </Drawer>
         </Hidden>
-        <Hidden mdDown implementation="css">
+        <Hidden smDown implementation="css">
           <Drawer classes={{ paper: classes.drawerPaper }} variant="permanent" open>
             <Toolbar>
               <div className={classes.search} edge="start">
@@ -139,10 +139,10 @@ class Sidebar extends React.Component {
                   inputProps={{ 'aria-label': 'search' }}
                 />
               </div>
-              <CreateChatButton></CreateChatButton>
+              <CreateChatButton createChat={createChat}></CreateChatButton>
             </Toolbar>
             <Divider />
-            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}></ChatList>
+            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)} activeChat={chat.activeChat}></ChatList>
             <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
               <Tooltip title="My Chats" arrow>
                 <BottomNavigationAction icon={<RestoreIcon />} />
@@ -161,11 +161,13 @@ class Sidebar extends React.Component {
 Sidebar.propTypes = {
   classes: PropTypes.objectOf(PropTypes.string).isRequired,
   window: PropTypes.func,
+  createChat: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   handleSideBar: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,
+    activeChat: PropTypes.instanceOf(Object).isRequired,
   }).isRequired,
 };
 

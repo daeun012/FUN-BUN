@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
+import { logoutRequest } from '../actions/user-actions';
 import { getAllChat, getMyChat, getActiveChat } from '../actions/chat-actions';
-import { socketConnect, umountChat, mountChat, sendMessage, joinChat } from '../actions/socket-actions';
+import { socketConnect, umountChat, mountChat, sendMessage, joinChat, createChat } from '../actions/socket-actions';
 import ChatPage from '../components/ChatPage';
 import UserService from '../services/UserService';
 
@@ -17,11 +18,16 @@ const mapStateToProps = (state) => {
       isCreator: UserService.user.isCreator(state.user.userData, state.chat.activeChat),
     },
     messages: state.messages,
+    isStatus: state.services.isStatus,
+    errors: state.services.errors,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    logoutRequest: () => {
+      return dispatch(logoutRequest());
+    },
     getAllChat: () => {
       return dispatch(getAllChat());
     },
@@ -45,6 +51,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     joinChat: (chatId) => {
       return dispatch(joinChat(chatId));
+    },
+    createChat: (title, desc) => {
+      return dispatch(createChat(title, desc));
     },
   };
 };

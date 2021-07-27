@@ -44,6 +44,7 @@ class ChatPage extends Component {
     const { params: prevParams } = prevProps.match;
 
     if (prevParams.chatId !== params.chatId) {
+      console.log('componentDidUpdate');
       getActiveChat(params.chatId);
       umountChat(prevParams.chatId);
       mountChat(params.chatId);
@@ -51,12 +52,12 @@ class ChatPage extends Component {
   }
 
   render() {
-    const { chat, user, messages, sendMessage, joinChat } = this.props;
+    const { chat, user, messages, sendMessage, joinChat, createChat } = this.props;
 
     return (
       <React.Fragment>
         <ChatHeader handleSideBar={this.handleSideBarToggle} />
-        <Sidebar chat={chat} handleSideBar={this.handleSideBarToggle} open={this.state.sideBarOpen} />
+        <Sidebar chat={chat} handleSideBar={this.handleSideBarToggle} open={this.state.sideBarOpen} createChat={createChat} />
         <Chat activeChat={chat.activeChat} messages={messages} user={user} sendMessage={sendMessage} joinChat={joinChat}></Chat>
       </React.Fragment>
     );
@@ -70,6 +71,7 @@ ChatPage.propTypes = {
   mountChat: PropTypes.func.isRequired,
   sendMessage: PropTypes.func.isRequired,
   joinChat: PropTypes.func.isRequired,
+  createChat: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,
@@ -81,5 +83,4 @@ ChatPage.propTypes = {
   }).isRequired,
   messages: PropTypes.array.isRequired,
 };
-
 export default withSnackbar(ChatPage);

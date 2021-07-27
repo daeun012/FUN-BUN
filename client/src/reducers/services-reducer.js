@@ -11,6 +11,7 @@ const initialState = {
     myChat: 'INIT',
     activeChat: 'INIT',
     joinChat: 'INIT',
+    createChat: 'INIT',
     socket: 'INIT',
   },
   errors: {
@@ -40,6 +41,8 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
       return update(state, { socket: { $set: 'WAITING' } });
     case types.JOIN_CHAT:
       return update(state, { joinChat: { $set: 'WAITING' } });
+    case types.CREATE_CHAT:
+      return update(state, { createChat: { $set: 'WAITING' } });
 
     // SUCCESS
     case types.USER_LOGIN_SUCCESS:
@@ -58,6 +61,10 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
 
     case types.SOCKET_CONNECTION_SUCCESS:
       return update(state, { socket: { $set: 'SUCCESS' } });
+    case types.JOIN_CHAT_SUCCESS:
+      return update(state, { joinChat: { $set: 'SUCCESS' } });
+    case types.CREATE_CHAT_SUCCESS:
+      return update(state, { createChat: { $set: 'SUCCESS' } });
 
     // FAILURE
     case types.USER_LOGIN_FAILURE:
@@ -78,6 +85,8 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
       return update(state, { socket: { $set: 'FAILURE' } });
     case types.JOIN_CHAT_FAILURE:
       return update(state, { joinChat: { $set: 'FAILURE' } });
+    case types.CREATE_CHAT_FAILURE:
+      return update(state, { createChat: { $set: 'FAILURE' } });
     default:
       return state;
   }
@@ -100,12 +109,15 @@ export const errors = (state = initialState.errors, { type, payload }) => {
     case types.GET_ACTIVE_CHAT_FAILURE:
     case types.SOCKET_CONNECTION_FAILURE:
     case types.JOIN_CHAT_FAILURE:
+    case types.CREATE_CHAT_FAILURE:
       return update(state, { chat: { $set: payload.error } });
 
     case types.GET_ALL_CHAT:
     case types.GET_MY_CHAT:
     case types.GET_ACTIVE_CHAT:
     case types.SOCKET_CONNECTION:
+    case types.JOIN_CHAT:
+    case types.CREATE_CHAT:
       return update(state, { user: { $set: null } });
     default:
       return state;

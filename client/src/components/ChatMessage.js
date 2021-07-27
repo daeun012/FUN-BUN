@@ -3,13 +3,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
-import { withStyles } from '@material-ui/core/styles';
+import { alpha, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
-import randomColor from '../util/randomColor';
+import randomColor from '../utils/randomColor';
 
 const styles = (theme) => ({
+  statusMessageWrapper: {
+    textAlign: 'center',
+    margin: `0px ${theme.spacing(3)}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(3)}px`,
+    backgroundColor: '#eeeeee',
+    borderRadius: '5px',
+  },
   messageWrapper: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -22,37 +29,31 @@ const styles = (theme) => ({
   message: {
     maxWidth: '70%',
     minWidth: '10%',
-    padding: theme.spacing(1),
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1.5),
   },
   messageFromMe: {
-    marginRight: theme.spacing(2),
-    backgroundColor: '#e6dcff',
+    marginRight: theme.spacing(0),
   },
-  statusMessage: {
-    width: '100%',
-    textAlign: 'center',
+  messagePaper: {
+    padding: theme.spacing(1),
+    backgroundColor: alpha(theme.palette.primary.main, 0.25),
   },
-  statusMessageUser: {
-    display: 'inline',
+  time: {
+    display: 'block',
+    textAlign: 'right',
   },
 });
 
 const ChatMessage = ({ classes, user, content, sender, createdAt, statusMessage }) => {
-  console.log(statusMessage);
   const isMessageFromMe = sender._id === user._id;
 
+  // 상태 메시지 출력
   if (statusMessage) {
     return (
-      <div className={classes.messageWrapper}>
-        <Typography className={classes.statusMessage}>
-          <Typography variant="caption" style={{ color: randomColor(sender._id) }} className={classes.statusMessageUser}>
-            {sender.username}
-          </Typography>
+      <div className={classes.statusMessageWrapper}>
+        <Typography>
+          {sender.username}
           {content}
-          <Typography variant="caption" component="span">
-            {moment(createdAt).fromNow()}
-          </Typography>
         </Typography>
       </div>
     );
@@ -60,25 +61,20 @@ const ChatMessage = ({ classes, user, content, sender, createdAt, statusMessage 
 
   const userAvatar = <Avatar style={{ backgroundColor: randomColor(sender._id) }}>{sender.username}</Avatar>;
 
-  //  ------------------
-  // |NAME OF SENDER    |
-  // |MESSAGE           |
-  // |TIME OF MESSAGE   |
-  //  ------------------
   return (
-    // eslint-disable-next-line
     <div className={classNames(classes.messageWrapper, isMessageFromMe && classes.messageWrappperFromMe)}>
       {!isMessageFromMe && userAvatar}
-      <Typography variant="caption" style={{ color: randomColor(sender._id) }}>
-        {sender.username}
-      </Typography>
-      <Paper className={classNames(classes.message, isMessageFromMe && classes.messageFromMe)}>
-        <Typography variant="body2">{content}</Typography>
-        <Typography variant="caption" className={classes.time}>
-          {moment(createdAt).fromNow()}
+      <div className={classNames(classes.message, isMessageFromMe && classes.messageFromMe)}>
+        <Typography variant="caption" style={{ color: randomColor(sender._id) }}>
+          {!isMessageFromMe && sender.username}
         </Typography>
-      </Paper>
-      {isMessageFromMe && userAvatar}
+        <Paper className={classes.messagePaper}>
+          <Typography variant="body2">{content}</Typography>
+        </Paper>
+        <Typography className={classNames(!isMessageFromMe && classes.time)} color="textSecondary" variant="caption">
+          {moment(createdAt).format('LT')}
+        </Typography>
+      </div>
     </div>
   );
 };

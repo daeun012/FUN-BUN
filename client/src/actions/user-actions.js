@@ -21,6 +21,14 @@ export function loginRequest(userId, password) {
   };
 }
 
+/* LOGOUT */
+export function logoutRequest() {
+  return (dispatch) => {
+    dispatch({ type: USER_LOGOUT });
+    Auth.logout();
+  };
+}
+
 /* REGISTER */
 export function registerRequest(data) {
   return (dispatch) => {

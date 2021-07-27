@@ -21,11 +21,7 @@ class LoginPage extends React.Component {
   };
 
   render() {
-    return (
-      <div>
-        <Auth mode={true} onLogin={this.handleLogin} />
-      </div>
-    );
+    return <Auth mode={true} onLogin={this.handleLogin} />;
   }
 }
 
