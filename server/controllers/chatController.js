@@ -80,4 +80,24 @@ module.exports = {
       console.log(err);
     }
   },
+
+  leaveChat: async (uid, chatId) => {
+    try {
+      let result = await Chat.findByIdAndUpdate(chatId, { $pull: { members: uid } }, { new: true })
+        .populate({ path: 'creator', select: 'username' })
+        .populate({ path: 'members', select: 'username' })
+        .lean();
+
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  deleteChat: async (chatId) => {
+    try {
+      await Chat.findByIdAndRemove(chatId);
+    } catch (err) {
+      console.log(err);
+    }
+  },
 };

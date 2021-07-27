@@ -52,11 +52,11 @@ class ChatPage extends Component {
   }
 
   render() {
-    const { chat, user, messages, sendMessage, joinChat, createChat } = this.props;
+    const { chat, user, messages, sendMessage, joinChat, createChat, leaveChat } = this.props;
 
     return (
       <React.Fragment>
-        <ChatHeader handleSideBar={this.handleSideBarToggle} />
+        <ChatHeader handleSideBar={this.handleSideBarToggle} activeChat={chat.activeChat} leaveChat={leaveChat} />
         <Sidebar chat={chat} handleSideBar={this.handleSideBarToggle} open={this.state.sideBarOpen} createChat={createChat} />
         <Chat activeChat={chat.activeChat} messages={messages} user={user} sendMessage={sendMessage} joinChat={joinChat}></Chat>
       </React.Fragment>
@@ -72,10 +72,11 @@ ChatPage.propTypes = {
   sendMessage: PropTypes.func.isRequired,
   joinChat: PropTypes.func.isRequired,
   createChat: PropTypes.func.isRequired,
+  leaveChat: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,
-    activeChat: PropTypes.instanceOf(Object).isRequired,
+    activeChat: PropTypes.instanceOf(Object),
   }).isRequired,
   user: PropTypes.shape({
     isMember: PropTypes.bool.isRequired,

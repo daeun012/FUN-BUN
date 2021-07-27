@@ -82,7 +82,7 @@ class MessageInput extends Component {
               </Grid>
             </Grid>
           </form>
-        )}{' '}
+        )}
       </div>
     );
   }

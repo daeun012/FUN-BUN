@@ -15,14 +15,18 @@ const styles = () => ({
 const Chat = ({ classes, user, messages, activeChat, sendMessage, joinChat }) => (
   <main className={classes.chatLayout}>
     <ChatMessageList user={user} messages={messages}></ChatMessageList>
-    <MessageInput showJoinButton={!(user.isMember || user.isCreator)} sendMessage={sendMessage} onJoinButtonClick={() => joinChat(activeChat._id)}></MessageInput>
+    {activeChat && <MessageInput showJoinButton={!(user.isMember || user.isCreator)} sendMessage={sendMessage} onJoinButtonClick={() => joinChat(activeChat._id)}></MessageInput>}
   </main>
 );
 
 Chat.propTypes = {
   sendMessage: PropTypes.func.isRequired,
   joinChat: PropTypes.func.isRequired,
-  activeChat: PropTypes.object.isRequired,
+  activeChat: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    desc: PropTypes.string.isRequired,
+  }),
   user: PropTypes.shape({
     isMember: PropTypes.bool.isRequired,
     isCreator: PropTypes.bool.isRequired,

@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { getActiveChat } from '../actions/chat-actions';
 
 const styles = (theme) => ({
   selected: {

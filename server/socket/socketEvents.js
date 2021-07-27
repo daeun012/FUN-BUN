@@ -1,6 +1,6 @@
 const jwtService = require('../services/jwtService');
 const { saveMessage } = require('../controllers/messageController');
-const { updateChat, createChat } = require('../controllers/chatController');
+const { updateChat, createChat, leaveChat, deleteChat } = require('../controllers/chatController');
 const chatService = require('../services/chatService');
 
 function socketAuth(socket, next) {
@@ -68,6 +68,30 @@ function socketEevents(io) {
         fn(chat);
       } catch (err) {
         socket.emit('error', { type: 'CREATE_CHAT_FAILURE', message: err.message });
+      }
+    });
+
+    socket.on('leaveChat', async (chatId, fn) => {
+      try {
+        let chat = await chatService.getChat(chatId);
+        if (chat.error) throw chat.error;
+
+        let leavedChat = await leaveChat(socket.uid, chatId);
+        console.log('leaveChat data=>', leavedChat, 'time=>', new Date().toLocaleString());
+
+        if (!leavedChat.members.lenght) {
+          deleteChat(chatId);
+          console.log('deleteChat data=>', leavedChat, 'time=>', new Date().toLocaleString());
+          return io.emit('deleteChat', chatId);
+        }
+
+        let statusMessage = await saveMessage(socket.uid, chatId, { content: '님이 나가셨습니다.', statusMessage: true });
+
+        io.to(chatId).emit('newMessage', statusMessage);
+
+        fn(leavedChat);
+      } catch (err) {
+        socket.emit('error', { type: 'LEAVE_CHAT_FAILURE', message: err.message });
       }
     });
 

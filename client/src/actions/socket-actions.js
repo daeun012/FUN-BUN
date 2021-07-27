@@ -5,7 +5,7 @@ import history from '../utils/history';
 let socket;
 
 export function socketConnect(token) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch({ type: types.SOCKET_CONNECTION });
 
     socket = io(`http://localhost:3000?token=${token}`);
@@ -26,6 +26,14 @@ export function socketConnect(token) {
     });
     socket.on('newChat', (chat) => {
       dispatch({ type: types.RECIEVE_NEW_CHAT, payload: { chat } });
+    });
+    socket.on('deleteChat', (chatId) => {
+      const activeChatId = getState().chat.activeChat._id;
+      dispatch({ type: types.RECIEVE_DELETE_CHAT, payload: { chatId } });
+
+      if (activeChatId === chatId) {
+        history.push('/');
+      }
     });
   };
 }
@@ -54,6 +62,20 @@ export function createChat(title, desc) {
         history.push(`/chat/${chat._id}`);
       } catch (err) {
         dispatch({ type: types.CREATE_CHAT_FAILURE, payload: { error: error.message } });
+      }
+    });
+  };
+}
+
+export function leaveChat(chatId) {
+  return (dispatch) => {
+    dispatch({ type: types.LEAVE_CHAT });
+    socket.emit('leaveChat', chatId, (chat) => {
+      try {
+        dispatch({ type: types.LEAVE_CHAT_SUCCESS, payload: { chat } });
+        history.push(`/`);
+      } catch (err) {
+        dispatch({ type: types.LEAVE_CHAT_FAILURE, payload: { error: err.message } });
       }
     });
   };

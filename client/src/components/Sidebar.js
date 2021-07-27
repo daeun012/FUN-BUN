@@ -167,7 +167,7 @@ Sidebar.propTypes = {
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,
-    activeChat: PropTypes.instanceOf(Object).isRequired,
+    activeChat: PropTypes.instanceOf(Object),
   }).isRequired,
 };
 

@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import ChatMessage from './ChatMessage';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
-import ChatMessage from './ChatMessage';
-
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 const styles = (theme) => ({
+  welcomWarapper: { height: '100%' },
+  paper: {
+    padding: theme.spacing(3),
+  },
   messageWrapper: {
     overflowY: 'scroll',
     height: 'calc(100% - 75px)',
     paddingTop: theme.spacing(3),
     paddingBottom: '50px',
-  },
-  paper: {
-    padding: theme.spacing(3),
   },
 });
 
@@ -21,7 +24,13 @@ class ChatMessageList extends Component {
     const { classes, match, user, messages } = this.props;
 
     if (!match.params.chatId) {
-      return 'not selected';
+      return (
+        <Grid className={classes.welcomWarapper} container justifyContent="center" alignItems="center">
+          <Paper className={classes.paper}>
+            <Typography>FUN & BUN</Typography>
+          </Paper>
+        </Grid>
+      );
     } else if (user.isMember || user.isCreator) {
       return (
         <div className={classes.messageWrapper}>

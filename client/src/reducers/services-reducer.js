@@ -12,6 +12,7 @@ const initialState = {
     activeChat: 'INIT',
     joinChat: 'INIT',
     createChat: 'INIT',
+    leaveChat: 'INIT',
     socket: 'INIT',
   },
   errors: {
@@ -43,6 +44,8 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
       return update(state, { joinChat: { $set: 'WAITING' } });
     case types.CREATE_CHAT:
       return update(state, { createChat: { $set: 'WAITING' } });
+    case types.LEAVE_CHAT:
+      return update(state, { leaveChat: { $set: 'WAITING' } });
 
     // SUCCESS
     case types.USER_LOGIN_SUCCESS:
@@ -65,6 +68,8 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
       return update(state, { joinChat: { $set: 'SUCCESS' } });
     case types.CREATE_CHAT_SUCCESS:
       return update(state, { createChat: { $set: 'SUCCESS' } });
+    case types.LEAVE_CHAT_SUCCESS:
+      return update(state, { leaveChat: { $set: 'SUCCESS' } });
 
     // FAILURE
     case types.USER_LOGIN_FAILURE:
@@ -87,6 +92,9 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
       return update(state, { joinChat: { $set: 'FAILURE' } });
     case types.CREATE_CHAT_FAILURE:
       return update(state, { createChat: { $set: 'FAILURE' } });
+    case types.LEAVE_CHAT_FAILURE:
+      return update(state, { leaveChat: { $set: 'FAILURE' } });
+
     default:
       return state;
   }
@@ -110,6 +118,7 @@ export const errors = (state = initialState.errors, { type, payload }) => {
     case types.SOCKET_CONNECTION_FAILURE:
     case types.JOIN_CHAT_FAILURE:
     case types.CREATE_CHAT_FAILURE:
+    case types.LEAVE_CHAT_FAILURE:
       return update(state, { chat: { $set: payload.error } });
 
     case types.GET_ALL_CHAT:
@@ -118,6 +127,7 @@ export const errors = (state = initialState.errors, { type, payload }) => {
     case types.SOCKET_CONNECTION:
     case types.JOIN_CHAT:
     case types.CREATE_CHAT:
+    case types.LEAVE_CHAT:
       return update(state, { user: { $set: null } });
     default:
       return state;
