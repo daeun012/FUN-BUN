@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
-
+import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Grid from '@material-ui/core/Grid';
@@ -56,7 +56,7 @@ class MessageInput extends Component {
       <div className={classes.messageInputWrapper}>
         {showJoinButton ? (
           <Button fullWidth color="primary" size="large" onClick={onJoinButtonClick}>
-            Join
+            <Typography>채팅 참여하기</Typography>
           </Button>
         ) : (
           <form className={classes.messageForm} onSubmit={this.handleSubmit}>

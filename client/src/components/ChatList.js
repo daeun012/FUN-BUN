@@ -15,19 +15,21 @@ const styles = () => ({
   },
 });
 
-const ChatList = ({ classes, data, activeChat }) => (
-  <List className={classes.chatList}>
+const ChatList = ({ classes, handleSideBar, data, activeChat }) => (
+  <List className={classes.chatList} onClick={handleSideBar}>
     {data && data.length ? (
-      data.map((chat) => <ChatListItem key={chat._id} data={chat} selected={Boolean(activeChat && activeChat._id === chat._id)}></ChatListItem>)
+      data.map((chat) => <ChatListItem key={chat._id} chat={chat} selected={Boolean(activeChat && activeChat._id === chat._id)}></ChatListItem>)
     ) : (
-      <Typography className={classes.noChat}>There are no chats yet..</Typography>
+      <Typography className={classes.noChat}>참여한 채팅방이 없습니다...</Typography>
     )}
   </List>
 );
 ChatList.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  handleSideBar: PropTypes.func,
   data: PropTypes.array.isRequired,
-  activeChat: PropTypes.instanceOf(Object).isRequired,
+  activeChat: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+  }),
 };
 
 export default withStyles(styles)(ChatList);

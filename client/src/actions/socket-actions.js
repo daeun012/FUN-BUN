@@ -13,7 +13,6 @@ export function socketConnect(token) {
       dispatch({ type: types.SOCKET_CONNECTION_SUCCESS });
     });
     socket.on('connect_error', (error) => {
-      console.log(error);
       dispatch({ type: types.SOCKET_CONNECTION_FAILURE, payload: { error: error.message } });
     });
 
@@ -28,12 +27,7 @@ export function socketConnect(token) {
       dispatch({ type: types.RECIEVE_NEW_CHAT, payload: { chat } });
     });
     socket.on('deleteChat', (chatId) => {
-      const activeChatId = getState().chat.activeChat._id;
       dispatch({ type: types.RECIEVE_DELETE_CHAT, payload: { chatId } });
-
-      if (activeChatId === chatId) {
-        history.push('/');
-      }
     });
   };
 }
@@ -43,11 +37,10 @@ export function joinChat(chatId) {
     dispatch({ type: types.JOIN_CHAT });
     socket.emit('joinChat', chatId, (chat) => {
       try {
-        console.log(chat);
         dispatch({ type: types.JOIN_CHAT_SUCCESS, payload: { chat } });
         history.push(`/chat/${chat._id}`);
       } catch (err) {
-        dispatch({ type: types.JOIN_CHAT_FAILURE, payload: { error: error.message } });
+        dispatch({ type: types.JOIN_CHAT_FAILURE, payload: { error: err.message } });
       }
     });
   };
@@ -61,7 +54,7 @@ export function createChat(title, desc) {
         dispatch({ type: types.CREATE_CHAT_SUCCESS, payload: { chat } });
         history.push(`/chat/${chat._id}`);
       } catch (err) {
-        dispatch({ type: types.CREATE_CHAT_FAILURE, payload: { error: error.message } });
+        dispatch({ type: types.CREATE_CHAT_FAILURE, payload: { error: err.message } });
       }
     });
   };

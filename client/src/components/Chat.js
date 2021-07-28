@@ -12,10 +12,10 @@ const styles = () => ({
     paddingTop: '64px',
   },
 });
-const Chat = ({ classes, user, messages, activeChat, sendMessage, joinChat }) => (
+const Chat = ({ classes, activeChat, messages, user, sendMessage, joinChat }) => (
   <main className={classes.chatLayout}>
-    <ChatMessageList user={user} messages={messages}></ChatMessageList>
-    {activeChat && <MessageInput showJoinButton={!(user.isMember || user.isCreator)} sendMessage={sendMessage} onJoinButtonClick={() => joinChat(activeChat._id)}></MessageInput>}
+    <ChatMessageList activeChat={activeChat} messages={messages} user={user}></ChatMessageList>
+    {activeChat && <MessageInput showJoinButton={!user.isMember} sendMessage={sendMessage} onJoinButtonClick={() => joinChat(activeChat._id)}></MessageInput>}
   </main>
 );
 
@@ -25,7 +25,9 @@ Chat.propTypes = {
   activeChat: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    members: PropTypes.array.isRequired,
+    createdAt: PropTypes.string.isRequired,
   }),
   user: PropTypes.shape({
     isMember: PropTypes.bool.isRequired,

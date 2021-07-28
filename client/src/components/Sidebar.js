@@ -1,9 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tab from './Tab';
 import ChatList from './ChatList';
 import CreateChatButton from './CreateChatButton';
 import { alpha, withStyles } from '@material-ui/core/styles';
 import Hidden from '@material-ui/core/Hidden';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Drawer from '@material-ui/core/Drawer';
 import SearchIcon from '@material-ui/icons/Search';
 import Divider from '@material-ui/core/Divider';
@@ -16,7 +19,7 @@ import ForumIcon from '@material-ui/icons/Forum';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const styles = (theme) => ({
-  drawer: {
+  drawerPaper: {
     [theme.breakpoints.up('md')]: { width: 320, flexShrink: 0 },
   },
 
@@ -72,16 +75,15 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    const { classes, window, chat, handleSideBar, open, createChat } = this.props;
+    const { classes, window, handleSideBar, open, chat, createChat } = this.props;
     const { activeTab, searchValue } = this.state;
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-      <nav className={classes.drawer}>
+      <nav className={classes.drawerPaper}>
         <Hidden smUp implementation="css">
           <Drawer
-            classes={{ paper: classes.drawerPaper }}
             container={container}
             variant="temporary"
             anchor="left"
@@ -110,7 +112,7 @@ class Sidebar extends React.Component {
               <CreateChatButton createChat={createChat}></CreateChatButton>
             </Toolbar>
             <Divider />
-            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)} activeChat={chat.activeChat}></ChatList>
+            <ChatList handleSideBar={handleSideBar} data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)} activeChat={chat.activeChat}></ChatList>
             <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
               <Tooltip title="My Chats" arrow>
                 <BottomNavigationAction icon={<RestoreIcon />} />
@@ -122,7 +124,11 @@ class Sidebar extends React.Component {
           </Drawer>
         </Hidden>
         <Hidden smDown implementation="css">
-          <Drawer classes={{ paper: classes.drawerPaper }} variant="permanent" open>
+          <Drawer variant="permanent" open>
+            <Tabs orientation="vertical" variant="scrollable" aria-label="Vertical tabs example">
+              <Tab label="Item One" />
+              <Tab label="Item Two" />
+            </Tabs>
             <Toolbar>
               <div className={classes.search} edge="start">
                 <div className={classes.searchIcon}>
@@ -159,11 +165,10 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   window: PropTypes.func,
+  handleSideBar: PropTypes.func.isRequired,
   createChat: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  handleSideBar: PropTypes.func.isRequired,
   chat: PropTypes.shape({
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,

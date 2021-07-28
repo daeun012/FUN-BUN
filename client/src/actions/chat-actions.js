@@ -2,6 +2,7 @@ import * as types from '../constants/chat-constants';
 import axios from 'axios';
 import history from '../utils/history';
 
+// 모든 채팅 가져오기
 export function getAllChat() {
   return (dispatch) => {
     dispatch({ type: types.GET_ALL_CHAT });
@@ -16,6 +17,7 @@ export function getAllChat() {
   };
 }
 
+// 내 채팅 가져오기
 export function getMyChat(uid) {
   return (dispatch) => {
     dispatch({ type: types.GET_MY_CHAT });
@@ -31,6 +33,7 @@ export function getMyChat(uid) {
   };
 }
 
+// 선택한(활동중인) 채팅 데이터 가져오기
 export function getActiveChat(chatId) {
   return (dispatch) => {
     dispatch({ type: types.GET_ACTIVE_CHAT });

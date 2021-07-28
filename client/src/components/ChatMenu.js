@@ -16,7 +16,7 @@ class ChatMenu extends React.Component {
   handleClose = (e) => {
     this.setState({ anchorEl: null });
   };
-  handleLeaveChat = () => {
+  handleLeaveClick = () => {
     this.handleClose();
     this.props.leaveChat();
   };
@@ -29,7 +29,7 @@ class ChatMenu extends React.Component {
           <MoreVertIcon />
         </IconButton>
         <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} keepMounted onClose={this.handleClose}>
-          <MenuItem onClick={this.handleLeaveChat} onClose={this.handleClose}>
+          <MenuItem onClick={this.handleLeaveClick} onClose={this.handleClose}>
             채팅방 나가기
           </MenuItem>
         </Menu>
@@ -37,5 +37,9 @@ class ChatMenu extends React.Component {
     );
   }
 }
+
+ChatMenu.propTypes = {
+  leaveChat: PropTypes.func.isRequired,
+};
 
 export default ChatMenu;

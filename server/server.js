@@ -23,7 +23,7 @@ db.on('error', console.error);
 db.once('open', () => {
   console.log('Connected to mongod server');
 });
-mongoose.connect('mongodb://localhost:27017/funbun', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true });
+mongoose.connect('mongodb://localhost:27017/funbun', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
 
 // 미들웨어
 app.use(express.json({ limit: '10mb', extended: true }));

@@ -1,10 +1,8 @@
 const jwtService = require('../services/jwtService');
-const { saveMessage } = require('../controllers/messageController');
-const { updateChat, createChat, leaveChat, deleteChat } = require('../controllers/chatController');
 const chatService = require('../services/chatService');
+const messageService = require('../services/messageService');
 
 function socketAuth(socket, next) {
-  console.log('auth');
   const token = socket.handshake.query.token;
 
   if (jwtService.verifyToken(token)) {
@@ -20,31 +18,32 @@ function socketEevents(io) {
   io.use(socketAuth);
 
   io.on('connection', (socket) => {
-    const socketId = socket.id;
-    console.log('connection socketId=>', socketId, 'time=>', new Date().toLocaleString());
+    console.log('connection socketId=>', socket.id, 'time=>', new Date().toLocaleString());
 
     socket.on('sendMessage', async (newMessage, fn) => {
-      const { chatId, content } = newMessage;
-      let message = await saveMessage(socket.uid, chatId, { content });
-      io.to(chatId).emit('newMessage', message);
-      console.log('sendMessage data=>', message, 'time=>', new Date().toLocaleString());
-      fn(message);
+      try {
+        const { chatId, content } = newMessage;
+        let message = await messageService.saveMessage(socket.uid, chatId, { content });
+        io.to(chatId).emit('newMessage', message);
+        console.log('sendMessage data=>', message.content, 'time=>', new Date().toLocaleString());
+        fn(message);
+      } catch (err) {
+        conosle.log(err);
+      }
     });
 
     socket.on('joinChat', async (chatId, fn) => {
       try {
         // 존재하고 있는 채팅방인지 확인
         let chat = await chatService.getChat(chatId);
-        if (chat.error) throw chat.error;
 
         // 이미 참여하고 있는 채팅방인지 확인
-        let checkJoin = await chatService.checkJoin(socket.uid, chat);
-        if (checkJoin.error) throw checkJoin.error;
+        await chatService.checkJoin(socket.uid, chat);
 
-        let updatedChat = await updateChat(socket.uid, chatId);
-        let statusMessage = await saveMessage(socket.uid, chatId, { content: '님이 입장하셨습니다.', statusMessage: true });
+        let updatedChat = await chatService.updateChat(socket.uid, chatId);
+        let statusMessage = await messageService.saveMessage(socket.uid, chatId, { content: '님이 입장하셨습니다.', statusMessage: true });
 
-        console.log('joinChat data=>', updatedChat, 'time=>', new Date().toLocaleString());
+        console.log('joinChat data=>', chatId, 'time=>', new Date().toLocaleString());
 
         io.to(chatId).emit('newMessage', statusMessage);
 
@@ -56,12 +55,10 @@ function socketEevents(io) {
 
     socket.on('createChat', async (title, desc, fn) => {
       try {
-        let createdChat = await createChat(socket.uid, title, desc);
-
+        // 채팅방 생성
+        let createdChat = await chatService.createChat(socket.uid, title, desc);
         let chat = await chatService.getChat(createdChat._id);
-        if (chat.error) throw chat.error;
-
-        console.log('createChat data=>', chat, 'time=>', new Date().toLocaleString());
+        console.log('createChat data=>', createdChat._id, 'time=>', new Date().toLocaleString());
 
         io.emit('newChat', chat);
 
@@ -73,23 +70,28 @@ function socketEevents(io) {
 
     socket.on('leaveChat', async (chatId, fn) => {
       try {
-        let chat = await chatService.getChat(chatId);
-        if (chat.error) throw chat.error;
+        // 존재하고 있는 채팅방인지 확인
+        await chatService.getChat(chatId);
 
-        let leavedChat = await leaveChat(socket.uid, chatId);
-        console.log('leaveChat data=>', leavedChat, 'time=>', new Date().toLocaleString());
+        let leavedChat = await chatService.leaveChat(socket.uid, chatId);
+        console.log('leaveChat data=>', leavedChat._id, 'time=>', new Date().toLocaleString());
+        fn(leavedChat);
 
-        if (!leavedChat.members.lenght) {
-          deleteChat(chatId);
-          console.log('deleteChat data=>', leavedChat, 'time=>', new Date().toLocaleString());
-          return io.emit('deleteChat', chatId);
+        // 채팅방에 아무도 존재하지 않는다면 삭제
+        if (leavedChat.members.lenght === 0) {
+          console.log('deleteChat');
+          try {
+            await chatService.deleteChat(chatId);
+            console.log('deleteChat data=>', chatId, 'time=>', new Date().toLocaleString());
+            return io.emit('deleteChat', chatId);
+          } catch (err) {
+            console.log(err);
+          }
         }
 
-        let statusMessage = await saveMessage(socket.uid, chatId, { content: '님이 나가셨습니다.', statusMessage: true });
+        let statusMessage = await messageService.saveMessage(socket.uid, chatId, { content: '님이 나가셨습니다.', statusMessage: true });
 
         io.to(chatId).emit('newMessage', statusMessage);
-
-        fn(leavedChat);
       } catch (err) {
         socket.emit('error', { type: 'LEAVE_CHAT_FAILURE', message: err.message });
       }

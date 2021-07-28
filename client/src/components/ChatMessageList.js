@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 import ChatMessage from './ChatMessage';
 import { withRouter } from 'react-router';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 const styles = (theme) => ({
   welcomWarapper: { height: '100%' },
+  joinWarapper: { height: 'calc(100% - 40px)' },
   paper: {
     padding: theme.spacing(3),
   },
@@ -21,7 +25,7 @@ const styles = (theme) => ({
 
 class ChatMessageList extends Component {
   render() {
-    const { classes, match, user, messages } = this.props;
+    const { classes, match, messages, user, activeChat } = this.props;
 
     if (!match.params.chatId) {
       return (
@@ -31,21 +35,42 @@ class ChatMessageList extends Component {
           </Paper>
         </Grid>
       );
-    } else if (user.isMember || user.isCreator) {
-      return (
-        <div className={classes.messageWrapper}>
-          {messages.map((message) => {
-            return <ChatMessage key={message._id} user={user} {...message} />;
-          })}
-        </div>
-      );
     } else {
-      return 'please join';
+      return activeChat ? (
+        user.isMember ? (
+          <div className={classes.messageWrapper}>
+            {messages.map((message) => {
+              return <ChatMessage key={message._id} user={user} {...message} />;
+            })}
+          </div>
+        ) : (
+          <Grid className={classes.joinWarapper} container alignItems="center" justifyContent="center" direction="column">
+            <Typography variant="h4">{activeChat.title}</Typography>
+            <Typography variant="overline">
+              {activeChat.members.length}명 / 개설일 {moment(activeChat.createdAt).format('YYYY.MM.DD')}
+            </Typography>
+            <Typography variant="h5" color="textSecondary">
+              {activeChat.description}
+            </Typography>
+          </Grid>
+        )
+      ) : (
+        <Grid className={classes.joinWarapper} container alignItems="center" justifyContent="center" direction="column">
+          <CircularProgress />
+        </Grid>
+      );
     }
   }
 }
 
 ChatMessageList.propTypes = {
+  activeChat: PropTypes.shape({
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    members: PropTypes.array,
+    createdAt: PropTypes.string,
+  }),
   messages: PropTypes.arrayOf(
     PropTypes.shape({
       content: PropTypes.string.isRequired,

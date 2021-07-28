@@ -60,7 +60,7 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
     case types.GET_MY_CHAT_SUCCESS:
       return update(state, { myChat: { $set: 'SUCCESS' } });
     case types.GET_ACTIVE_CHAT_SUCCESS:
-      return update(state, { activeChat: { $set: 'SUCCESS' } });
+      return update(state, { activeChat: { $set: 'SUCCESS' }, messages: { $set: 'SUCCESS' } });
 
     case types.SOCKET_CONNECTION_SUCCESS:
       return update(state, { socket: { $set: 'SUCCESS' } });
@@ -84,7 +84,7 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
     case types.GET_MY_CHAT_FAILURE:
       return update(state, { myChat: { $set: 'FAILURE' } });
     case types.GET_ACTIVE_CHAT_FAILURE:
-      return update(state, { activeChat: { $set: 'FAILURE' } });
+      return update(state, { activeChat: { $set: 'FAILURE' }, messages: { $set: 'FAILURE' } });
 
     case types.SOCKET_CONNECTION_FAILURE:
       return update(state, { socket: { $set: 'FAILURE' } });

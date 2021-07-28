@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,16 +11,15 @@ const styles = (theme) => ({
   },
 });
 
-const ChatListItem = ({ classes, data, selected }) => (
-  <ListItem button component={Link} to={`/chat/${data._id}`} className={selected ? classes.selected : ''}>
-    <ListItemText primary={data.title} secondary={data.description}></ListItemText>
+const ChatListItem = ({ classes, chat, selected }) => (
+  <ListItem button component={Link} to={`/chat/${chat._id}`} className={selected ? classes.selected : ''}>
+    <ListItemText primary={chat.title} secondary={chat.description}></ListItemText>
   </ListItem>
 );
 
 ChatListItem.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
-  data: PropTypes.object.isRequired,
+  chat: PropTypes.object.isRequired,
   selected: PropTypes.bool.isRequired,
 };
 
-export default withRouter(withStyles(styles)(ChatListItem));
+export default withStyles(styles)(ChatListItem);

@@ -25,7 +25,7 @@ const styles = (theme) => ({
   },
 });
 
-const ChatHeader = ({ classes, handleSideBar, activeChat, leaveChat }) => (
+const ChatHeader = ({ classes, handleSideBar, leaveChat, activeChat, user }) => (
   <AppBar className={classes.appBar}>
     <Toolbar>
       <IconButton color="inherit" aria-label="open drawer" edge="start" className={classes.sideBarButton} onClick={handleSideBar}>
@@ -34,7 +34,7 @@ const ChatHeader = ({ classes, handleSideBar, activeChat, leaveChat }) => (
       {activeChat ? (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>
           {activeChat.title}
-          <ChatMenu leaveChat={() => leaveChat(activeChat._id)}></ChatMenu>
+          {user.isMember ? <ChatMenu leaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
         </Typography>
       ) : (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>
@@ -46,13 +46,16 @@ const ChatHeader = ({ classes, handleSideBar, activeChat, leaveChat }) => (
 );
 
 ChatHeader.propTypes = {
-  classes: PropTypes.objectOf(PropTypes.string).isRequired,
   handleSideBar: PropTypes.func.isRequired,
   leaveChat: PropTypes.func.isRequired,
   activeChat: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
   }),
+  user: PropTypes.shape({
+    isMember: PropTypes.bool.isRequired,
+    isCreator: PropTypes.bool.isRequired,
+  }).isRequired,
 };
 
 export default withStyles(styles)(ChatHeader);

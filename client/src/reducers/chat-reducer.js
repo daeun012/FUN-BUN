@@ -30,8 +30,7 @@ const myChat = (state = initialState.myChat, { type, payload }) => {
     case types.CREATE_CHAT_SUCCESS:
       return update(state, { $push: [payload.chat] });
     case types.LEAVE_CHAT_SUCCESS:
-    case types.RECIEVE_DELETE_CHAT:
-      return update(state, { $splice: [[state.findIndex((chat) => chat._id === payload.chatId), 1]] });
+      return update(state, { $splice: [[state.findIndex((chat) => chat._id === payload.chat._id), 1]] });
     default:
       return state;
   }
@@ -44,7 +43,6 @@ const activeChat = (state = initialState.activeChat, { type, payload }) => {
     case types.JOIN_CHAT_SUCCESS:
       return update(state, { $set: payload.chat });
     case types.LEAVE_CHAT_SUCCESS:
-    case types.RECIEVE_DELETE_CHAT:
       return update(state, { $set: null });
     default:
       return state;

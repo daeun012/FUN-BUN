@@ -43,8 +43,7 @@ class ChatPage extends Component {
     } = this.props;
     const { params: prevParams } = prevProps.match;
 
-    if (prevParams.chatId !== params.chatId) {
-      console.log('componentDidUpdate');
+    if (params.chatId && prevParams.chatId !== params.chatId) {
       getActiveChat(params.chatId);
       umountChat(prevParams.chatId);
       mountChat(params.chatId);
@@ -56,16 +55,17 @@ class ChatPage extends Component {
 
     return (
       <React.Fragment>
-        <ChatHeader handleSideBar={this.handleSideBarToggle} activeChat={chat.activeChat} leaveChat={leaveChat} />
-        <Sidebar chat={chat} handleSideBar={this.handleSideBarToggle} open={this.state.sideBarOpen} createChat={createChat} />
+        <ChatHeader handleSideBar={this.handleSideBarToggle} activeChat={chat.activeChat} user={user} leaveChat={leaveChat} />
+        <Sidebar handleSideBar={this.handleSideBarToggle} open={this.state.sideBarOpen} chat={chat} createChat={createChat} />
         <Chat activeChat={chat.activeChat} messages={messages} user={user} sendMessage={sendMessage} joinChat={joinChat}></Chat>
       </React.Fragment>
     );
   }
 }
 ChatPage.propTypes = {
-  getMyChat: PropTypes.func.isRequired,
   getAllChat: PropTypes.func.isRequired,
+  getMyChat: PropTypes.func.isRequired,
+  socketConnect: PropTypes.func.isRequired,
   getActiveChat: PropTypes.func.isRequired,
   umountChat: PropTypes.func.isRequired,
   mountChat: PropTypes.func.isRequired,

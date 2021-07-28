@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Axios from 'axios';
 import AuthService from '../services/AuthService';
 import { withSnackbar } from 'notistack';
 import { withStyles } from '@material-ui/core/styles';
