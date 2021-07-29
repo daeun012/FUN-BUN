@@ -1,6 +1,7 @@
 import * as types from '../constants/user-constants';
 import axios from 'axios';
 import AuthService from '../services/AuthService';
+import history from '../utils/history';
 
 const Auth = new AuthService();
 
@@ -24,8 +25,9 @@ export function loginRequest(userId, password) {
 /* LOGOUT */
 export function logoutRequest() {
   return (dispatch) => {
-    dispatch({ type: USER_LOGOUT });
+    dispatch({ type: types.USER_LOGOUT });
     Auth.logout();
+    history.push('/login');
   };
 }
 

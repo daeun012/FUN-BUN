@@ -34,7 +34,7 @@ const ChatHeader = ({ classes, handleSideBar, leaveChat, activeChat, user }) => 
       {activeChat ? (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>
           {activeChat.title}
-          {user.isMember ? <ChatMenu leaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
+          {user.isMember ? <ChatMenu onLeaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
         </Typography>
       ) : (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>

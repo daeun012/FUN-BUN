@@ -8,7 +8,7 @@ export function socketConnect(token) {
   return (dispatch, getState) => {
     dispatch({ type: types.SOCKET_CONNECTION });
 
-    socket = io(`http://localhost:3000?token=${token}`);
+    socket = io(`localhost:3000?token=${token}`);
     socket.on('connect', () => {
       dispatch({ type: types.SOCKET_CONNECTION_SUCCESS });
     });

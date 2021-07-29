@@ -78,7 +78,7 @@ function socketEevents(io) {
         fn(leavedChat);
 
         // 채팅방에 아무도 존재하지 않는다면 삭제
-        if (leavedChat.members.lenght === 0) {
+        if (leavedChat.members.length === 0) {
           console.log('deleteChat');
           try {
             await chatService.deleteChat(chatId);

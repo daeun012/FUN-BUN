@@ -13,6 +13,7 @@ class PrivateRoute extends React.Component {
 
   componentDidMount() {
     if (!this.Auth.loggedIn()) {
+      console.log(this.props.history);
       this.props.history.replace('/login');
     } else {
       try {

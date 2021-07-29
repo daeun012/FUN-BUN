@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
+import SettingsIcon from '@material-ui/icons/Settings';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-class ChatMenu extends React.Component {
+class Setting extends React.Component {
   state = {
     anchorEl: null,
   };
@@ -16,9 +16,9 @@ class ChatMenu extends React.Component {
   handleClose = (e) => {
     this.setState({ anchorEl: null });
   };
-  handleLeaveClick = () => {
+  handleLogoutClick = () => {
     this.handleClose();
-    this.props.onLeaveChat();
+    this.props.onLogout();
   };
 
   render() {
@@ -26,11 +26,14 @@ class ChatMenu extends React.Component {
     return (
       <React.Fragment>
         <IconButton aria-controls="simple-menu" color="inherit" aria-haspopup="true" onClick={this.handleClick}>
-          <MoreVertIcon />
+          <SettingsIcon />
         </IconButton>
         <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} keepMounted onClose={this.handleClose}>
           <MenuItem onClick={this.handleLeaveClick} onClose={this.handleClose}>
-            채팅방 나가기
+            프로필 편집
+          </MenuItem>
+          <MenuItem onClick={this.handleLogoutClick} onClose={this.handleClose}>
+            로그아웃
           </MenuItem>
         </Menu>
       </React.Fragment>
@@ -38,8 +41,8 @@ class ChatMenu extends React.Component {
   }
 }
 
-ChatMenu.propTypes = {
-  onLeaveChat: PropTypes.func.isRequired,
+Setting.propTypes = {
+  onLogout: PropTypes.func.isRequired,
 };
 
-export default ChatMenu;
+export default Setting;

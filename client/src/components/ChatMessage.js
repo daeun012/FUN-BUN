@@ -3,10 +3,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import moment from 'moment';
+import UserAvatar from './UserAvatar';
 import { alpha, withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
 import randomColor from '../utils/randomColor';
 
 const styles = (theme) => ({
@@ -59,7 +59,7 @@ const ChatMessage = ({ classes, user, content, sender, createdAt, statusMessage 
     );
   }
 
-  const userAvatar = <Avatar style={{ backgroundColor: randomColor(sender._id) }}>{sender.username}</Avatar>;
+  const userAvatar = <UserAvatar size="50" name={sender.username} color={sender._id}></UserAvatar>;
 
   return (
     <div className={classNames(classes.messageWrapper, isMessageFromMe && classes.messageWrappperFromMe)}>
