@@ -24,7 +24,7 @@ export function getMyChat(uid) {
     return axios
       .get(`/chat/mychat/${uid}`)
       .then((res) => {
-        dispatch({ type: types.GET_MY_CHAT_SUCCESS, payload: { myChat: res.data['myChat'] } });
+        dispatch({ type: types.GET_MY_CHAT_SUCCESS, payload: { myChat: res.data['myChat'], matchChat: res.data['matchChat'] } });
       })
       .catch((err) => {
         console.log(err);
@@ -34,18 +34,32 @@ export function getMyChat(uid) {
 }
 
 // 선택한(활동중인) 채팅 데이터 가져오기
-export function getActiveChat(chatId) {
+export function getActiveChat(id) {
   return (dispatch) => {
     dispatch({ type: types.GET_ACTIVE_CHAT });
-    return axios
-      .get(`/chat/data/${chatId}`)
-      .then((res) => {
-        dispatch({ type: types.GET_ACTIVE_CHAT_SUCCESS, payload: { activeChat: res.data['activeChat'], messages: res.data['messages'] } });
-        history.push(`/chat/${res.data.activeChat._id}`);
-      })
-      .catch((err) => {
-        dispatch({ type: types.GET_ACTIVE_CHAT_FAILURE, payload: { error: err.response.data['error'] } });
-        history.push('/');
-      });
+
+    return id.chatId
+      ? // 채팅인 경우
+        axios
+          .get(`/chat/data/chat/${id.chatId}`)
+          .then((res) => {
+            dispatch({ type: types.GET_ACTIVE_CHAT_SUCCESS, payload: { activeChat: res.data['activeChat'], messages: res.data['messages'] } });
+            history.push(`/chat/${res.data.activeChat._id}`);
+          })
+          .catch((err) => {
+            dispatch({ type: types.GET_ACTIVE_CHAT_FAILURE, payload: { error: err.response.data['error'] } });
+            history.push('/');
+          })
+      : // 매칭인 경우
+        axios
+          .get(`/chat/data/match/${id.matchId}`)
+          .then((res) => {
+            dispatch({ type: types.GET_ACTIVE_CHAT_SUCCESS, payload: { activeChat: res.data['activeChat'], messages: res.data['messages'] } });
+            history.push(`/match/${res.data.activeChat._id}`);
+          })
+          .catch((err) => {
+            dispatch({ type: types.GET_ACTIVE_CHAT_FAILURE, payload: { error: err.response.data['error'] } });
+            history.push('/');
+          });
   };
 }

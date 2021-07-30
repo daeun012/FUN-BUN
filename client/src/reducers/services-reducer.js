@@ -9,6 +9,7 @@ const initialState = {
     userData: 'INIT',
     allChat: 'INIT',
     myChat: 'INIT',
+    matchChat: 'INIT',
     activeChat: 'INIT',
     joinChat: 'INIT',
     createChat: 'INIT',
@@ -34,7 +35,7 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
     case types.GET_ALL_CHAT:
       return update(state, { allChat: { $set: 'WAITING' } });
     case types.GET_MY_CHAT:
-      return update(state, { myChat: { $set: 'WAITING' } });
+      return update(state, { myChat: { $set: 'WAITING' }, matchChat: { $set: 'WAITING' } });
     case types.GET_ACTIVE_CHAT:
       return update(state, { activeChat: { $set: 'WAITING' }, messages: { $set: 'WAITING' } });
 
@@ -58,7 +59,7 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
     case types.GET_ALL_CHAT_SUCCESS:
       return update(state, { allChat: { $set: 'SUCCESS' } });
     case types.GET_MY_CHAT_SUCCESS:
-      return update(state, { myChat: { $set: 'SUCCESS' } });
+      return update(state, { myChat: { $set: 'SUCCESS' }, matchChat: { $set: 'SUCCESS' } });
     case types.GET_ACTIVE_CHAT_SUCCESS:
       return update(state, { activeChat: { $set: 'SUCCESS' }, messages: { $set: 'SUCCESS' } });
 
@@ -82,7 +83,7 @@ export const isStatus = (state = initialState.isStatus, { type, payload }) => {
     case types.GET_ALL_CHAT_FAILURE:
       return update(state, { allChat: { $set: 'FAILURE' } });
     case types.GET_MY_CHAT_FAILURE:
-      return update(state, { myChat: { $set: 'FAILURE' } });
+      return update(state, { myChat: { $set: 'FAILURE' }, matchChat: { $set: 'FAILURE' } });
     case types.GET_ACTIVE_CHAT_FAILURE:
       return update(state, { activeChat: { $set: 'FAILURE' }, messages: { $set: 'FAILURE' } });
 

@@ -27,15 +27,7 @@ class ChatMessageList extends Component {
   render() {
     const { classes, match, messages, user, activeChat } = this.props;
 
-    if (!match.params.chatId) {
-      return (
-        <Grid className={classes.welcomWarapper} container justifyContent="center" alignItems="center">
-          <Paper className={classes.paper}>
-            <Typography>FUN & BUN</Typography>
-          </Paper>
-        </Grid>
-      );
-    } else {
+    if (match.params.chatId || match.params.matchId) {
       return activeChat ? (
         user.isMember ? (
           <div className={classes.messageWrapper}>
@@ -57,6 +49,20 @@ class ChatMessageList extends Component {
       ) : (
         <Grid className={classes.joinWarapper} container alignItems="center" justifyContent="center" direction="column">
           <CircularProgress />
+        </Grid>
+      );
+    } else {
+      return match.url === '/' ? (
+        <Grid className={classes.welcomWarapper} container justifyContent="center" alignItems="center">
+          <Paper className={classes.paper}>
+            <Typography>FUN & BUN</Typography>
+          </Paper>
+        </Grid>
+      ) : (
+        <Grid className={classes.welcomWarapper} container justifyContent="center" alignItems="center">
+          <Paper className={classes.paper}>
+            <Typography>매칭</Typography>
+          </Paper>
         </Grid>
       );
     }

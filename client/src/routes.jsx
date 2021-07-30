@@ -18,6 +18,11 @@ const theme = createTheme({
       main: '#7986cb',
       dark: '#545d8e',
     },
+    secondary: {
+      light: '#a05050',
+      main: '#e53935',
+      dark: '#ea8f8f',
+    },
   },
   typography: {
     fontFamily: ['Noto Sans KR', 'sans-serif'],
@@ -40,7 +45,7 @@ const MainRouter = ({ classes }) => (
           <Switch>
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
-            <PrivateRoute exact path={['/', '/chat/:chatId']} component={Chat} />
+            <PrivateRoute exact path={['/', '/match', '/match/:matchId', '/chat/:chatId']} component={Chat} />
           </Switch>
         </div>
       </Router>

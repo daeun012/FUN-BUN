@@ -2,13 +2,13 @@ import * as types from '../constants/socket-constants';
 import io from 'socket.io-client';
 import history from '../utils/history';
 
-let socket;
+let socket = null;
 
 export function socketConnect(token) {
   return (dispatch, getState) => {
     dispatch({ type: types.SOCKET_CONNECTION });
 
-    socket = io(`localhost:3000?token=${token}`);
+    socket = io('http://localhost:3000/', { query: { token } });
     socket.on('connect', () => {
       dispatch({ type: types.SOCKET_CONNECTION_SUCCESS });
     });
@@ -28,6 +28,20 @@ export function socketConnect(token) {
     });
     socket.on('deleteChat', (chatId) => {
       dispatch({ type: types.RECIEVE_DELETE_CHAT, payload: { chatId } });
+    });
+  };
+}
+
+export function randomMatch(grade, dept) {
+  return (dispatch) => {
+    dispatch({ type: types.RANDOM_MATCH });
+    socket.emit('randomMatch', grade, dept, (match) => {
+      try {
+        dispatch({ type: types.RANDOM_MATCH_SUCCESS, payload: { match } });
+        history.push(`/match/${match._id}`);
+      } catch (err) {
+        dispatch({ type: types.RANDOM_MATCH_FAILURE, payload: { error: err.message } });
+      }
     });
   };
 }

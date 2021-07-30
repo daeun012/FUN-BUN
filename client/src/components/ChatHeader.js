@@ -7,7 +7,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-
+import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
 const styles = (theme) => ({
   appBar: {
     [theme.breakpoints.up('md')]: {
@@ -16,6 +16,7 @@ const styles = (theme) => ({
     },
   },
   appBarTitle: {
+    flex: 1,
     marginLeft: theme.spacing(2),
   },
   sideBarButton: {
@@ -28,19 +29,22 @@ const styles = (theme) => ({
 const ChatHeader = ({ classes, handleSideBar, leaveChat, activeChat, user }) => (
   <AppBar className={classes.appBar}>
     <Toolbar>
-      <IconButton color="inherit" aria-label="open drawer" edge="start" className={classes.sideBarButton} onClick={handleSideBar}>
+      <IconButton color="inherit" aria-label="open sideBar" edge="start" className={classes.sideBarButton} onClick={handleSideBar}>
         <KeyboardArrowLeftIcon />
       </IconButton>
       {activeChat ? (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>
-          {activeChat.title}
-          {user.isMember ? <ChatMenu onLeaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
+          {activeChat.title || activeChat.dept}
+          {user.isMember && activeChat.title ? <ChatMenu onLeaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
         </Typography>
       ) : (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>
           FUN & BUN
         </Typography>
       )}
+      <IconButton color="inherit" aria-label="open memberDrawer">
+        <PeopleAltOutlinedIcon />
+      </IconButton>
     </Toolbar>
   </AppBar>
 );
@@ -50,7 +54,8 @@ ChatHeader.propTypes = {
   leaveChat: PropTypes.func.isRequired,
   activeChat: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    dept: PropTypes.dept,
   }),
   user: PropTypes.shape({
     isMember: PropTypes.bool.isRequired,

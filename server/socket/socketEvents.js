@@ -1,9 +1,9 @@
 const jwtService = require('../services/jwtService');
 const chatService = require('../services/chatService');
 const messageService = require('../services/messageService');
-
+const matchService = require('../services/matchService');
 function socketAuth(socket, next) {
-  const token = socket.handshake.query.token;
+  const { token } = socket.handshake.query;
 
   if (jwtService.verifyToken(token)) {
     socket.uid = jwtService.verifyToken(token).id;
@@ -29,6 +29,34 @@ function socketEevents(io) {
         fn(message);
       } catch (err) {
         conosle.log(err);
+      }
+    });
+
+    socket.on('randomMatch', async (grade, dept, fn) => {
+      try {
+        // 들어갈 수 있는 매칭방 가져오기
+        let match = await matchService.getRandomMatch(grade, dept);
+
+        if (match) {
+          // 있다면 매치 업데이트
+          let updatedMatch = await matchService.updateMatch(socket.uid, match._id);
+          let statusMessage = await messageService.saveMessage(socket.uid, match._id, { content: '님이 입장하셨습니다.', statusMessage: true });
+
+          console.log('updateMatch data=>', match._id, 'time=>', new Date().toLocaleString());
+
+          io.to(match._id).emit('newMessage', statusMessage);
+
+          fn(updatedMatch);
+        } else {
+          // 없다면 매치 생성
+          let createdMatch = await matchService.createMatch(socket.uid, dept);
+          let match = await matchService.getMatch(createdMatch._id);
+          console.log('createMatch data=>', createdMatch._id, 'time=>', new Date().toLocaleString());
+
+          fn(match);
+        }
+      } catch (err) {
+        socket.emit('error', { type: 'RANDOM_MATCH_FAILURE', message: err.message });
       }
     });
 

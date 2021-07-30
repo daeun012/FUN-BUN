@@ -5,6 +5,7 @@ import * as types from '../constants';
 const initialState = {
   allChat: [],
   myChat: [],
+  matchChat: null,
   activeChat: null,
 };
 
@@ -36,6 +37,17 @@ const myChat = (state = initialState.myChat, { type, payload }) => {
   }
 };
 
+const matchChat = (state = initialState.matchChat, { type, payload }) => {
+  switch (type) {
+    case types.GET_MY_CHAT_SUCCESS:
+      return update(state, { $set: payload.matchChat });
+    case types.RANDOM_MATCH_SUCCESS:
+      return update(state, { $set: payload.match });
+    default:
+      return state;
+  }
+};
+
 const activeChat = (state = initialState.activeChat, { type, payload }) => {
   switch (type) {
     case types.GET_ACTIVE_CHAT_SUCCESS:
@@ -53,4 +65,5 @@ export default combineReducers({
   allChat,
   myChat,
   activeChat,
+  matchChat,
 });

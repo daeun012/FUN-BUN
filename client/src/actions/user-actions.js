@@ -38,10 +38,10 @@ export function registerRequest(data) {
     return axios
       .post('/users/register', data)
       .then((res) => {
-        InfoToast.custom.info('인증 메일을 전송했습니다.', 3000);
         dispatch({ type: types.USER_REGISTER_SUCCESS });
       })
       .catch((err) => {
+        console.log(err);
         dispatch({ type: types.USER_REGISTER_FAILURE, payload: { error: err.response.data['error'] } });
       });
   };

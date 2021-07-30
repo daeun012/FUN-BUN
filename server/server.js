@@ -1,11 +1,15 @@
 const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-const socketEevents = require('./socket/socketEvents');
+const http = require('http');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const socketIOServer = require('socket.io');
+const socketEevents = require('./socket/socketEvents');
 const path = require('path');
+
+const app = express();
+
+const server = http.createServer(app);
+const io = socketIOServer(server);
 
 const userRoutes = require('./routes/userRoute');
 const chatRoutes = require('./routes/chatRoute');
@@ -13,7 +17,7 @@ const chatRoutes = require('./routes/chatRoute');
 app.use(cors());
 
 const port = 5000;
-http.listen(port, () => {
+server.listen(port, () => {
   console.log('Listening on port: ', port);
 });
 

@@ -26,7 +26,7 @@ const UserAvatar = ({ color, size, name }) => {
     height: `${size}px`,
     backgroundColor: ColorForm(color),
   };
-  return <Avatar style={innerStyle}>{name.charAt(0)}</Avatar>;
+  return <Avatar style={innerStyle}>{name.slice(1, 3)}</Avatar>;
 };
 
 export default UserAvatar;

@@ -18,10 +18,17 @@ import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+
+import { Link } from 'react-router-dom';
+
 const styles = (theme) => ({
   drawerPaper: { [theme.breakpoints.up('md')]: { width: 320, flexShrink: 0 } },
   drawer: {
     width: 320,
+  },
+  circularProgressWrapper: {
+    height: 'calc(100% - 56px)',
   },
   search: {
     position: 'relative',
@@ -75,10 +82,12 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    const { classes, window, handleSideBar, open, chat, user, createChat, logoutRequest } = this.props;
+    const { classes, isConnected, window, handleSideBar, open, chat, user, createChat, logoutRequest, onRandomMatchClick } = this.props;
     const { activeTab, searchValue } = this.state;
 
     const container = window !== undefined ? () => window().document.body : undefined;
+
+    console.log(chat.matchChat);
     const header = (
       <Box mb={3}>
         <Grid item xs container direction="column" justifyContent="center" alignItems="stretch">
@@ -132,6 +141,12 @@ class Sidebar extends React.Component {
       </div>
     );
 
+    const matchingButton = (
+      <Button style={{ borderRadius: 0 }} /* component={Link} to="/match" */ onClick={onRandomMatchClick} variant="outlined" color="secondary" size="large" fullWidth>
+        매칭 시작하기
+      </Button>
+    );
+
     return (
       <nav className={classes.drawerPaper}>
         <Hidden smUp implementation="css">
@@ -148,7 +163,14 @@ class Sidebar extends React.Component {
           >
             {header}
             {search}
-            <ChatList handleSideBar={handleSideBar} data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)} activeChat={chat.activeChat}></ChatList>
+            {isConnected && !chat.matchChat && matchingButton}
+            <ChatList
+              disabled={!isConnected}
+              handleSideBar={handleSideBar}
+              data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}
+              matchChat={activeTab === 0 && chat.matchChat}
+              activeChat={chat.activeChat}
+            ></ChatList>
             {bottomNavigation}
           </Drawer>
         </Hidden>
@@ -156,8 +178,13 @@ class Sidebar extends React.Component {
           <Drawer variant="permanent" classes={{ paper: classes.drawer }} open>
             {header}
             {search}
-
-            <ChatList data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)} activeChat={chat.activeChat}></ChatList>
+            {isConnected && !chat.matchChat && matchingButton}
+            <ChatList
+              disabled={!isConnected}
+              data={this.filterChat(activeTab === 0 ? chat.myChat : chat.allChat)}
+              matchChat={activeTab === 0 && chat.matchChat}
+              activeChat={chat.activeChat}
+            ></ChatList>
             {bottomNavigation}
           </Drawer>
         </Hidden>
@@ -167,6 +194,7 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
+  isConnected: PropTypes.bool.isRequired,
   window: PropTypes.func,
   handleSideBar: PropTypes.func.isRequired,
   logoutRequest: PropTypes.func.isRequired,
@@ -176,6 +204,7 @@ Sidebar.propTypes = {
     allChat: PropTypes.instanceOf(Array).isRequired,
     myChat: PropTypes.instanceOf(Array).isRequired,
     activeChat: PropTypes.instanceOf(Object),
+    matchChat: PropTypes.instanceOf(Object),
   }).isRequired,
   user: PropTypes.shape({
     _id: PropTypes.string.isRequired,
