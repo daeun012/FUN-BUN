@@ -1,6 +1,4 @@
 const Match = require('../models/Match');
-const Chat = require('../models/Chat');
-const Message = require('../models/Message');
 
 module.exports = {
   getMatch: async (matchId) => {

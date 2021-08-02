@@ -27,8 +27,6 @@ const styles = (theme) => ({
     justifyContent: 'flex-end',
   },
   message: {
-    maxWidth: '70%',
-    minWidth: '10%',
     marginLeft: theme.spacing(1.5),
   },
   messageFromMe: {
@@ -36,6 +34,9 @@ const styles = (theme) => ({
   },
   messagePaper: {
     padding: theme.spacing(1),
+    backgroundColor: alpha(theme.palette.primary.main, 0.1),
+  },
+  messagePaperFromMe: {
     backgroundColor: alpha(theme.palette.primary.main, 0.25),
   },
   time: {
@@ -59,16 +60,14 @@ const ChatMessage = ({ classes, user, content, sender, createdAt, statusMessage 
     );
   }
 
-  const userAvatar = <UserAvatar size="50" name={sender.username} color={sender._id}></UserAvatar>;
-
   return (
     <div className={classNames(classes.messageWrapper, isMessageFromMe && classes.messageWrappperFromMe)}>
-      {!isMessageFromMe && userAvatar}
+      {!isMessageFromMe && <UserAvatar name={sender.username} color={sender._id}></UserAvatar>}
       <div className={classNames(classes.message, isMessageFromMe && classes.messageFromMe)}>
         <Typography variant="caption" style={{ color: randomColor(sender._id) }}>
           {!isMessageFromMe && sender.username}
         </Typography>
-        <Paper className={classes.messagePaper}>
+        <Paper className={classNames(classes.messagePaper, isMessageFromMe && classes.messagePaperFromMe)}>
           <Typography variant="body2">{content}</Typography>
         </Paper>
         <Typography className={classNames(!isMessageFromMe && classes.time)} color="textSecondary" variant="caption">

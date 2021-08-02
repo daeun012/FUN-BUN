@@ -7,7 +7,7 @@ const messageService = require('../services/messageService');
 module.exports = {
   getAllChatList: async (req, res, next) => {
     try {
-      let allChat = await Chat.find().populate({ path: 'creator', select: 'username' }).populate({ path: 'members', select: 'username' }).lean();
+      let allChat = await Chat.find({}, { member: false }).populate({ path: 'creator', select: 'username' }).lean();
       return res.status(200).json({
         allChat,
       });
@@ -25,7 +25,7 @@ module.exports = {
       let matchChat = await Match.findOne({ members: uid }).populate({ path: 'members', select: 'username grade' }).lean();
       console.log(matchChat);
       // 참여한 채팅 가져오기
-      let myChat = await Chat.find({ members: uid }).populate({ path: 'members', select: 'username' }).lean();
+      let myChat = await Chat.find({ members: uid }, { members: false }).lean();
 
       return res.status(200).json({
         myChat: myChat,

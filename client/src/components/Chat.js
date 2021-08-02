@@ -24,8 +24,9 @@ Chat.propTypes = {
   joinChat: PropTypes.func.isRequired,
   activeChat: PropTypes.shape({
     _id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    dept: PropTypes.string,
+    description: PropTypes.string,
     members: PropTypes.array.isRequired,
     createdAt: PropTypes.string.isRequired,
   }),

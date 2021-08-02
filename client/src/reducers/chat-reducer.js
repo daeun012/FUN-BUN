@@ -13,6 +13,8 @@ const allChat = (state = initialState.allChat, { type, payload }) => {
   switch (type) {
     case types.GET_ALL_CHAT_SUCCESS:
       return update(state, { $set: payload.allChat });
+    case types.RECIEVE_UPDATE_ALL_CHAT_INFO:
+      return update(state, { [state.findIndex((chat) => chat._id === payload.chat._id)]: { $set: payload.chat } });
     case types.RECIEVE_NEW_CHAT:
       return update(state, { $push: [payload.chat] });
     case types.RECIEVE_DELETE_CHAT:
@@ -43,6 +45,8 @@ const matchChat = (state = initialState.matchChat, { type, payload }) => {
       return update(state, { $set: payload.matchChat });
     case types.RANDOM_MATCH_SUCCESS:
       return update(state, { $set: payload.match });
+    case types.RECIEVE_UPDATE_MATCH_INFO:
+      return update(state, { members: { $set: payload.members } });
     default:
       return state;
   }
@@ -54,6 +58,9 @@ const activeChat = (state = initialState.activeChat, { type, payload }) => {
       return update(state, { $set: payload.activeChat });
     case types.JOIN_CHAT_SUCCESS:
       return update(state, { $set: payload.chat });
+    case types.RECIEVE_UPDATE_MATCH_INFO:
+    case types.RECIEVE_UPDATE_CHAT_INFO:
+      return update(state, { members: { $set: payload.members } });
     case types.LEAVE_CHAT_SUCCESS:
       return update(state, { $set: null });
     default:

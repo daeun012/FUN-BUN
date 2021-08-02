@@ -8,18 +8,15 @@ const path = require('path');
 
 const app = express();
 
+app.use(cors());
+
 const server = http.createServer(app);
 const io = socketIOServer(server);
 
 const userRoutes = require('./routes/userRoute');
 const chatRoutes = require('./routes/chatRoute');
 
-app.use(cors());
-
 const port = 5000;
-server.listen(port, () => {
-  console.log('Listening on port: ', port);
-});
 
 // mongodb 연결하기
 let db = mongoose.connection;
@@ -38,6 +35,10 @@ app.use(socketEevents(io));
 
 app.use('/users/', userRoutes.router);
 app.use('/chat/', chatRoutes.router);
+
+server.listen(port, () => {
+  console.log('Listening on port: ', port);
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/public/index.html'));

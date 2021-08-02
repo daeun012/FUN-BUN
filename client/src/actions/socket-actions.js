@@ -5,10 +5,10 @@ import history from '../utils/history';
 let socket = null;
 
 export function socketConnect(token) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({ type: types.SOCKET_CONNECTION });
 
-    socket = io('http://localhost:3000/', { query: { token } });
+    socket = io('ws://localhost:3000/', { query: { token } });
     socket.on('connect', () => {
       dispatch({ type: types.SOCKET_CONNECTION_SUCCESS });
     });
@@ -20,8 +20,19 @@ export function socketConnect(token) {
       dispatch({ type: types[error.type], payload: { error: error.message } });
     });
 
-    socket.on('newMessage', (message) => {
-      dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+    socket.on('newMessage', (message, data) => {
+      if (data.tip === 'joinChat') {
+        dispatch({ type: types.RECIEVE_UPDATE_CHAT_INFO, payload: { members: data.members } });
+        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+      } else if (data.tip === 'randomMatch') {
+        dispatch({ type: types.RECIEVE_UPDATE_MATCH_INFO, payload: { members: data.members } });
+        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+      } else if (data.tip === 'leaveChat') {
+        dispatch({ type: types.RECIEVE_UPDATE_CHAT_INFO, payload: { members: data.members } });
+        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+      } else {
+        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+      }
     });
     socket.on('newChat', (chat) => {
       dispatch({ type: types.RECIEVE_NEW_CHAT, payload: { chat } });
@@ -80,7 +91,7 @@ export function leaveChat(chatId) {
     socket.emit('leaveChat', chatId, (chat) => {
       try {
         dispatch({ type: types.LEAVE_CHAT_SUCCESS, payload: { chat } });
-        history.push(`/`);
+        history.push('/');
       } catch (err) {
         dispatch({ type: types.LEAVE_CHAT_FAILURE, payload: { error: err.message } });
       }

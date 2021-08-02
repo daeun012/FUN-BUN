@@ -19,7 +19,7 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-
+import ExploreIcon from '@material-ui/icons/Explore';
 import { Link } from 'react-router-dom';
 
 const styles = (theme) => ({
@@ -87,7 +87,6 @@ class Sidebar extends React.Component {
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
-    console.log(chat.matchChat);
     const header = (
       <Box mb={3}>
         <Grid item xs container direction="column" justifyContent="center" alignItems="stretch">
@@ -105,6 +104,7 @@ class Sidebar extends React.Component {
         </Grid>
       </Box>
     );
+
     const search = (
       <div>
         <Toolbar style={{ backgroundColor: '#fafafa' }}>
@@ -132,10 +132,10 @@ class Sidebar extends React.Component {
       <div>
         <BottomNavigation value={activeTab} onChange={this.handleTabChange} showLabels>
           <Tooltip title="My Chats" arrow>
-            <BottomNavigationAction icon={<RestoreIcon />} />
+            <BottomNavigationAction icon={<ForumIcon />} />
           </Tooltip>
           <Tooltip title="Explore" arrow>
-            <BottomNavigationAction icon={<ForumIcon />} />
+            <BottomNavigationAction icon={<ExploreIcon />} />
           </Tooltip>
         </BottomNavigation>
       </div>

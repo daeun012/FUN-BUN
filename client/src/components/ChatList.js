@@ -62,8 +62,8 @@ ChatList.propTypes = {
   disabled: PropTypes.bool.isRequired,
   data: PropTypes.array.isRequired,
   matchChat: PropTypes.shape({
-    _id: PropTypes.string.isRequired,
-    dept: PropTypes.string.isRequired,
+    _id: PropTypes.string,
+    dept: PropTypes.string,
   }),
   activeChat: PropTypes.shape({
     _id: PropTypes.string.isRequired,

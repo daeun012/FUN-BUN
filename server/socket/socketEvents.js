@@ -24,7 +24,7 @@ function socketEevents(io) {
       try {
         const { chatId, content } = newMessage;
         let message = await messageService.saveMessage(socket.uid, chatId, { content });
-        io.to(chatId).emit('newMessage', message);
+        io.to(chatId).emit('newMessage', message, { tip: 'sendMessage' });
         console.log('sendMessage data=>', message.content, 'time=>', new Date().toLocaleString());
         fn(message);
       } catch (err) {
@@ -44,7 +44,7 @@ function socketEevents(io) {
 
           console.log('updateMatch data=>', match._id, 'time=>', new Date().toLocaleString());
 
-          io.to(match._id).emit('newMessage', statusMessage);
+          io.to(match._id).emit('newMessage', statusMessage, { members: updatedMatch.members, tip: 'randomMatch' });
 
           fn(updatedMatch);
         } else {
@@ -73,7 +73,7 @@ function socketEevents(io) {
 
         console.log('joinChat data=>', chatId, 'time=>', new Date().toLocaleString());
 
-        io.to(chatId).emit('newMessage', statusMessage);
+        io.to(chatId).emit('newMessage', statusMessage, { members: updatedChat.members, tip: 'joinChat' });
 
         fn(updatedChat);
       } catch (err) {
@@ -103,13 +103,14 @@ function socketEevents(io) {
 
         let leavedChat = await chatService.leaveChat(socket.uid, chatId);
         console.log('leaveChat data=>', leavedChat._id, 'time=>', new Date().toLocaleString());
+        socket.leave(chatId);
         fn(leavedChat);
 
         // 채팅방에 아무도 존재하지 않는다면 삭제
         if (leavedChat.members.length === 0) {
-          console.log('deleteChat');
           try {
             await chatService.deleteChat(chatId);
+            await messageService.deleteMessage(chatId);
             console.log('deleteChat data=>', chatId, 'time=>', new Date().toLocaleString());
             return io.emit('deleteChat', chatId);
           } catch (err) {
@@ -119,7 +120,7 @@ function socketEevents(io) {
 
         let statusMessage = await messageService.saveMessage(socket.uid, chatId, { content: '님이 나가셨습니다.', statusMessage: true });
 
-        io.to(chatId).emit('newMessage', statusMessage);
+        io.to(chatId).emit('newMessage', statusMessage, { members: leavedChat.members, tip: 'leaveChat' });
       } catch (err) {
         socket.emit('error', { type: 'LEAVE_CHAT_FAILURE', message: err.message });
       }

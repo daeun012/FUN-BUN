@@ -23,6 +23,9 @@ const theme = createTheme({
       main: '#e53935',
       dark: '#ea8f8f',
     },
+    background: {
+      default: '#fff',
+    },
   },
   typography: {
     fontFamily: ['Noto Sans KR', 'sans-serif'],

@@ -23,4 +23,12 @@ module.exports = {
       throw new Error(err);
     }
   },
+  deleteMessage: async (chatId) => {
+    try {
+      let result = await Message.remove({ chatId });
+      return result;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
 };

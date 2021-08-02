@@ -8,11 +8,14 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
+
+const sideBarWidth = 320;
+
 const styles = (theme) => ({
   appBar: {
     [theme.breakpoints.up('md')]: {
-      width: 'calc(100% - 320px)',
-      marginLeft: 320,
+      width: `calc(100% - ${sideBarWidth}px )`,
+      marginLeft: sideBarWidth,
     },
   },
   appBarTitle: {
@@ -26,25 +29,27 @@ const styles = (theme) => ({
   },
 });
 
-const ChatHeader = ({ classes, handleSideBar, leaveChat, activeChat, user }) => (
+const ChatHeader = ({ classes, handleSideBar, handleChatInfo, leaveChat, activeChat, user }) => (
   <AppBar className={classes.appBar}>
     <Toolbar>
       <IconButton color="inherit" aria-label="open sideBar" edge="start" className={classes.sideBarButton} onClick={handleSideBar}>
         <KeyboardArrowLeftIcon />
       </IconButton>
       {activeChat ? (
-        <Typography variant="h5" className={classes.appBarTitle} noWrap>
-          {activeChat.title || activeChat.dept}
-          {user.isMember && activeChat.title ? <ChatMenu onLeaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
-        </Typography>
+        <React.Fragment>
+          <Typography variant="h5" className={classes.appBarTitle} noWrap>
+            {activeChat.title || activeChat.dept}
+            {user.isMember && activeChat.title ? <ChatMenu onLeaveChat={() => leaveChat(activeChat._id)}></ChatMenu> : null}
+          </Typography>
+          <IconButton color="inherit" aria-label="open chatInfo" onClick={handleChatInfo}>
+            <PeopleAltOutlinedIcon />
+          </IconButton>
+        </React.Fragment>
       ) : (
         <Typography variant="h5" className={classes.appBarTitle} noWrap>
           FUN & BUN
         </Typography>
       )}
-      <IconButton color="inherit" aria-label="open memberDrawer">
-        <PeopleAltOutlinedIcon />
-      </IconButton>
     </Toolbar>
   </AppBar>
 );

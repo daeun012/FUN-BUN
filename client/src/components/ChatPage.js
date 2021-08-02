@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import ChatHeader from './ChatHeader';
 import Sidebar from './Sidebar';
 import Chat from './Chat';
+import ChatInfo from './ChatInfo';
 import AuthService from '../services/AuthService';
 
 class ChatPage extends Component {
@@ -11,12 +12,16 @@ class ChatPage extends Component {
     super(props);
     this.state = {
       sideBarOpen: false,
+      chatInfoOpen: false,
     };
     this.Auth = new AuthService();
   }
 
   handleSideBarToggle = () => {
     this.setState({ sideBarOpen: !this.state.sideBarOpen });
+  };
+  handleChatInfoToggle = () => {
+    this.setState({ chatInfoOpen: !this.state.chatInfoOpen });
   };
 
   componentDidMount() {
@@ -27,11 +32,12 @@ class ChatPage extends Component {
       })
       .then(() => {
         const { chatId, matchId } = match.params;
+
         if (chatId) {
-          getActiveChat(chatId);
+          getActiveChat({ chatId });
           mountChat(chatId);
         } else if (matchId) {
-          getActiveChat(matchId);
+          getActiveChat({ matchId });
           mountChat(matchId);
         }
       });
@@ -47,10 +53,12 @@ class ChatPage extends Component {
     const { params: prevParams } = prevProps.match;
 
     if (params.chatId && prevParams.chatId !== params.chatId) {
+      console.log(prevParams.chatId);
       getActiveChat({ chatId: params.chatId });
       umountChat(prevParams.chatId);
       mountChat(params.chatId);
     } else if (params.matchId && prevParams.matchId !== params.matchId) {
+      console.log(prevParams.chatId);
       getActiveChat({ matchId: params.matchId });
       umountChat(prevParams.matchId);
       mountChat(params.matchId);
@@ -62,7 +70,14 @@ class ChatPage extends Component {
 
     return (
       <React.Fragment>
-        <ChatHeader handleSideBar={this.handleSideBarToggle} handleMemberDrawer={this.handleMemberDrawerToggle} activeChat={chat.activeChat} user={user} leaveChat={leaveChat} />
+        <ChatHeader
+          handleSideBar={this.handleSideBarToggle}
+          handleChatInfo={this.handleChatInfoToggle}
+          chatInfoOpen={this.state.chatInfoOpen}
+          activeChat={chat.activeChat}
+          user={user}
+          leaveChat={leaveChat}
+        />
         <Sidebar
           isConnected={isStatus.socket === 'SUCCESS'}
           handleSideBar={this.handleSideBarToggle}
@@ -74,6 +89,7 @@ class ChatPage extends Component {
           createChat={createChat}
         />
         <Chat activeChat={chat.activeChat} messages={messages} user={user} sendMessage={sendMessage} joinChat={joinChat}></Chat>
+        <ChatInfo handleChatInfo={this.handleChatInfoToggle} open={this.state.chatInfoOpen} activeChat={chat.activeChat}></ChatInfo>
       </React.Fragment>
     );
   }

@@ -7,15 +7,16 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = (theme) => ({
-  welcomWarapper: { height: '100%' },
+  welcomWarapper: { height: '90%' },
   joinWarapper: { height: 'calc(100% - 40px)' },
   paper: {
     padding: theme.spacing(3),
   },
-  messageWrapper: {
+  messagesWrapper: {
     overflowY: 'scroll',
     height: 'calc(100% - 75px)',
     paddingTop: theme.spacing(3),
@@ -24,13 +25,30 @@ const styles = (theme) => ({
 });
 
 class ChatMessageList extends Component {
+  componentDidMount() {
+    this.scrollDownHistory();
+  }
+  componentDidUpdate() {
+    this.scrollDownHistory();
+  }
+
+  scrollDownHistory() {
+    if (this.messagesWrapper) {
+      this.messagesWrapper.scrollTop = this.messagesWrapper.scrollHeight;
+    }
+  }
   render() {
     const { classes, match, messages, user, activeChat } = this.props;
 
     if (match.params.chatId || match.params.matchId) {
       return activeChat ? (
         user.isMember ? (
-          <div className={classes.messageWrapper}>
+          <div
+            className={classes.messagesWrapper}
+            ref={(wrapper) => {
+              this.messagesWrapper = wrapper;
+            }}
+          >
             {messages.map((message) => {
               return <ChatMessage key={message._id} user={user} {...message} />;
             })}
@@ -55,7 +73,20 @@ class ChatMessageList extends Component {
       return match.url === '/' ? (
         <Grid className={classes.welcomWarapper} container justifyContent="center" alignItems="center">
           <Paper className={classes.paper}>
-            <Typography>FUN & BUN</Typography>
+            <Typography gutterBottom align="center" variant="h4">
+              FUN & BUN
+            </Typography>
+            <Typography align="center">
+              대학생들을 위한{' '}
+              <Box display="inline" color="primary.main">
+                랜덤 매칭
+              </Box>{' '}
+              및{' '}
+              <Box display="inline" color="primary.main">
+                그룹 채팅
+              </Box>{' '}
+              서비스
+            </Typography>
           </Paper>
         </Grid>
       ) : (
