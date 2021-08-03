@@ -8,7 +8,7 @@ export function socketConnect(token) {
   return (dispatch) => {
     dispatch({ type: types.SOCKET_CONNECTION });
 
-    socket = io('ws://localhost:3000/', { query: { token } });
+    socket = io('http://localhost:3000/', { query: { token } });
     socket.on('connect', () => {
       dispatch({ type: types.SOCKET_CONNECTION_SUCCESS });
     });
@@ -21,17 +21,22 @@ export function socketConnect(token) {
     });
 
     socket.on('newMessage', (message, data) => {
+      console.log('hi');
+      console.log(message, data);
       if (data.tip === 'joinChat') {
         dispatch({ type: types.RECIEVE_UPDATE_CHAT_INFO, payload: { members: data.members } });
-        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
-      } else if (data.tip === 'randomMatch') {
-        dispatch({ type: types.RECIEVE_UPDATE_MATCH_INFO, payload: { members: data.members } });
-        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+        dispatch({ type: types.RECIEVE_ACTIVE_MESSAGE, payload: { message } });
       } else if (data.tip === 'leaveChat') {
         dispatch({ type: types.RECIEVE_UPDATE_CHAT_INFO, payload: { members: data.members } });
-        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
-      } else {
-        dispatch({ type: types.RECIEVE_MESSAGE, payload: { message } });
+        dispatch({ type: types.RECIEVE_ACTIVE_MESSAGE, payload: { message } });
+      } else if (data.tip === 'sendChatMsg') {
+        dispatch({ type: types.RECIEVE_ACTIVE_MESSAGE, payload: { message } });
+      } else if (data.tip === 'randomMatch') {
+        dispatch({ type: types.RECIEVE_UPDATE_MATCH_INFO, payload: { members: data.members } });
+        dispatch({ type: types.RECIEVE_MATCH_MESSAGE, payload: { message } });
+      } else if (data.tip === 'sendMatchMsg') {
+        console.log('sendMatchMsg');
+        dispatch({ type: types.RECIEVE_MATCH_MESSAGE, payload: { message } });
       }
     });
     socket.on('newChat', (chat) => {
@@ -99,19 +104,38 @@ export function leaveChat(chatId) {
   };
 }
 
-export function sendMessage(content) {
+export function sendChatMsg(content) {
   return (dispatch, getState) => {
     const activeChatId = getState().chat.activeChat._id;
     socket.emit(
-      'sendMessage',
+      'sendChatMsg',
       {
         chatId: activeChatId,
         content,
       },
       (message) => {
         dispatch({
-          type: types.SEND_MESSAGE,
+          type: types.SEND_CHAT_MESSAGE,
           payload: { chatId: activeChatId, message },
+        });
+      }
+    );
+  };
+}
+
+export function sendMatchMsg(content) {
+  return (dispatch, getState) => {
+    const myMatchId = getState().chat.myMatch._id;
+    socket.emit(
+      'sendMatchMsg',
+      {
+        matchId: myMatchId,
+        content,
+      },
+      (message) => {
+        dispatch({
+          type: types.SEND_MATCH_MESSAGE,
+          payload: { matchId: myMatchId, message },
         });
       }
     );

@@ -37,18 +37,21 @@ module.exports = {
 
       // 인원이 한명인 매칭방이 있다면
       let result = unMatchList.filter((match) => match.members.length === 1);
-      if (result) {
+      if (result.length !== 0) {
         // 오래된 매칭방부터 리턴
+        console.log(result);
         return result[0];
       } else {
         // 인원이 2명
         result = unMatchList.filter((match) => match.members.length === 2);
-        if (result) {
+        if (result.length !== 0) {
+          console.log(unMatchList);
           return result[0];
         } else {
           // 인원이 3명
+          console.log(unMatchList);
           result = unMatchList.filter((match) => match.members.length === 3);
-          if (result) {
+          if (result.length !== 0) {
             return result[0];
           }
         }

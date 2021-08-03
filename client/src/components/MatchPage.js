@@ -1,18 +1,24 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
+import ChatMessage from './ChatMessage';
 import { withStyles } from '@material-ui/core/styles';
-import InputBase from '@material-ui/core/InputBase';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import InputBase from '@material-ui/core/InputBase';
 import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
-import Grid from '@material-ui/core/Grid';
 
 const styles = (theme) => ({
+  messagesWrapper: {
+    overflowY: 'scroll',
+    height: 'calc(100% - 75px)',
+    paddingTop: theme.spacing(3),
+    paddingBottom: '50px',
+  },
   messageInputWrapper: {
     backgroundColor: theme.palette.action.selected,
-  },
-  joinButton: {
-    padding: theme.spacing(2),
   },
   messageForm: {
     padding: theme.spacing(2),
@@ -30,35 +36,56 @@ const styles = (theme) => ({
   },
 });
 
-class MessageInput extends Component {
+class MatchPage extends Component {
   state = {
     value: '',
   };
+
   handleValueChange = (e) => {
     this.setState({
       value: e.target.value,
     });
   };
+
   handleSubmit = (e) => {
     e.preventDefault();
     const { value } = this.state;
     if (value !== '') {
-      this.props.sendMessage(value);
+      this.props.sendMatchMsg(value);
     }
     this.setState({
       value: '',
     });
   };
 
+  componentDidMount() {
+    this.scrollDownHistory();
+  }
+  componentDidUpdate() {
+    this.scrollDownHistory();
+  }
+
+  scrollDownHistory() {
+    if (this.messagesWrapper) {
+      this.messagesWrapper.scrollTop = this.messagesWrapper.scrollHeight;
+    }
+  }
   render() {
-    const { classes, showJoinButton, onJoinButtonClick } = this.props;
+    const { classes, messages, user } = this.props;
+
     return (
-      <div className={classes.messageInputWrapper}>
-        {showJoinButton ? (
-          <Button fullWidth color="primary" size="large" onClick={onJoinButtonClick}>
-            <Typography>채팅 참여하기</Typography>
-          </Button>
-        ) : (
+      <div style={{ height: '100%' }}>
+        <div
+          className={classes.messagesWrapper}
+          ref={(wrapper) => {
+            this.messagesWrapper = wrapper;
+          }}
+        >
+          {messages.map((message) => {
+            return <ChatMessage key={message._id} user={user} {...message} />;
+          })}
+        </div>
+        <div className={classes.messageInputWrapper}>
           <form className={classes.messageForm} onSubmit={this.handleSubmit}>
             <Grid container spacing={2}>
               <Grid item xs={9}>
@@ -82,13 +109,33 @@ class MessageInput extends Component {
               </Grid>
             </Grid>
           </form>
-        )}
+        </div>
       </div>
     );
   }
 }
-MessageInput.propTypes = {
-  showJoinButton: PropTypes.bool.isRequired,
-  onJoinButtonClick: PropTypes.func.isRequired,
+
+MatchPage.propTypes = {
+  activeChat: PropTypes.shape({
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    members: PropTypes.array,
+    createdAt: PropTypes.string,
+  }),
+  messages: PropTypes.arrayOf(
+    PropTypes.shape({
+      content: PropTypes.string.isRequired,
+      sender: PropTypes.instanceOf(Object).isRequired,
+      chatId: PropTypes.string.isRequired,
+      statusMessage: PropTypes.bool,
+      createdAt: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  user: PropTypes.shape({
+    isMember: PropTypes.bool.isRequired,
+    isCreator: PropTypes.bool.isRequired,
+  }).isRequired,
 };
-export default withStyles(styles)(MessageInput);
+
+export default withStyles(styles)(MatchPage);

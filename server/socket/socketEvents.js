@@ -1,3 +1,4 @@
+const Match = require('../models/Match');
 const jwtService = require('../services/jwtService');
 const chatService = require('../services/chatService');
 const messageService = require('../services/messageService');
@@ -17,15 +18,35 @@ function socketAuth(socket, next) {
 function socketEevents(io) {
   io.use(socketAuth);
 
-  io.on('connection', (socket) => {
+  io.on('connection', async (socket) => {
     console.log('connection socketId=>', socket.id, 'time=>', new Date().toLocaleString());
 
-    socket.on('sendMessage', async (newMessage, fn) => {
+    let myMatch = await Match.findOne({ members: socket.uid });
+
+    if (myMatch) {
+      socket.join(`${myMatch._id}`);
+      console.log('join myMatch sucess=>', myMatch._id, 'time=>', new Date().toLocaleString());
+    }
+
+    socket.on('sendChatMsg', async (newMessage, fn) => {
       try {
         const { chatId, content } = newMessage;
         let message = await messageService.saveMessage(socket.uid, chatId, { content });
-        io.to(chatId).emit('newMessage', message, { tip: 'sendMessage' });
-        console.log('sendMessage data=>', message.content, 'time=>', new Date().toLocaleString());
+        console.log(socket);
+        io.to(chatId).emit('newMessage', message, { tip: 'sendChatMsg' });
+        console.log('sendChatMsg data=>', message.content, 'time=>', new Date().toLocaleString());
+        fn(message);
+      } catch (err) {
+        conosle.log(err);
+      }
+    });
+
+    socket.on('sendMatchMsg', async (newMessage, fn) => {
+      try {
+        const { matchId, content } = newMessage;
+        let message = await messageService.saveMessage(socket.uid, matchId, { content });
+        io.to(`${matchId}`).emit('newMessage', message, { tip: 'sendMatchMsg' });
+        console.log('sendMatchMsg data=>', message.content, 'time=>', new Date().toLocaleString());
         fn(message);
       } catch (err) {
         conosle.log(err);
@@ -40,19 +61,18 @@ function socketEevents(io) {
         if (match) {
           // 있다면 매치 업데이트
           let updatedMatch = await matchService.updateMatch(socket.uid, match._id);
+          console.log('updateMatch data=>', match._id, 'time=>', new Date().toLocaleString());
+          socket.join(`${match._id}`);
+          fn(updatedMatch);
           let statusMessage = await messageService.saveMessage(socket.uid, match._id, { content: '님이 입장하셨습니다.', statusMessage: true });
 
-          console.log('updateMatch data=>', match._id, 'time=>', new Date().toLocaleString());
-
-          io.to(match._id).emit('newMessage', statusMessage, { members: updatedMatch.members, tip: 'randomMatch' });
-
-          fn(updatedMatch);
+          socket.broadcast.to(`${match._id}`).emit('newMessage', statusMessage, { members: updatedMatch.members, tip: 'randomMatch' });
         } else {
           // 없다면 매치 생성
           let createdMatch = await matchService.createMatch(socket.uid, dept);
           let match = await matchService.getMatch(createdMatch._id);
           console.log('createMatch data=>', createdMatch._id, 'time=>', new Date().toLocaleString());
-
+          socket.join(`${createdMatch._id}`);
           fn(match);
         }
       } catch (err) {

@@ -24,7 +24,7 @@ const theme = createTheme({
       dark: '#ea8f8f',
     },
     background: {
-      default: '#fff',
+      default: '#ffff',
     },
   },
   typography: {

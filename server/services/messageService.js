@@ -11,7 +11,7 @@ module.exports = {
     try {
       const newMessage = new Message(
         Object.assign({}, data, {
-          chatId,
+          chatId: chatId,
           sender: uid,
         })
       );
@@ -23,6 +23,7 @@ module.exports = {
       throw new Error(err);
     }
   },
+
   deleteMessage: async (chatId) => {
     try {
       let result = await Message.remove({ chatId });
