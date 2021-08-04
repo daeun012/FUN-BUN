@@ -33,7 +33,7 @@ function socketEevents(io) {
         const { chatId, content } = newMessage;
         let message = await messageService.saveMessage(socket.uid, chatId, { content });
         console.log(socket);
-        io.to(chatId).emit('newMessage', message, { tip: 'sendChatMsg' });
+        io.to(`${chatId}`).emit('newMessage', message, { tip: 'sendChatMsg' });
         console.log('sendChatMsg data=>', message.content, 'time=>', new Date().toLocaleString());
         fn(message);
       } catch (err) {

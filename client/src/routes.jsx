@@ -14,14 +14,14 @@ import Chat from './containers/ChatPage';
 const theme = createTheme({
   palette: {
     primary: {
-      light: '#939ed5',
-      main: '#7986cb',
-      dark: '#545d8e',
+      light: '#a6d4fa',
+      main: '#90caf9',
+      dark: '#648dae',
     },
     secondary: {
-      light: '#a05050',
-      main: '#e53935',
-      dark: '#ea8f8f',
+      light: '#ea8f8f',
+      main: '#f44336',
+      dark: '#a05050',
     },
     background: {
       default: '#ffff',

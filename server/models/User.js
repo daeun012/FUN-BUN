@@ -11,8 +11,10 @@ const userSchema = new mongoose.Schema(
     grade: Number,
     dept: String,
     key: String,
+    /*  
     match: { type: Boolean, default: 0 },
-    auth: { type: Boolean, default: 0 },
+    auth: { type: Boolean, default: 0 }, 
+    */
   },
   { timestamps: true }
 );

@@ -12,12 +12,14 @@ const styles = (theme) => ({
     padding: theme.spacing(3),
   },
   number: {
-    color: theme.palette.primary.main,
+    color: theme.palette.secondary.light,
     fontSize: '18px',
   },
   randomMatchButton: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(2),
+    color: theme.palette.secondary.light,
+    borderColor: theme.palette.secondary.light,
   },
 });
 const MatchManualPage = ({ classes, randomMatch }) => (
@@ -31,9 +33,13 @@ const MatchManualPage = ({ classes, randomMatch }) => (
           <span className={classes.number}>1.</span> 같은 과 학생들끼리 매칭이 성사됩니다.
         </Typography>
         <Typography gutterBottom align="left">
-          <span className={classes.number}>2.</span> 1학년, 2학년, 3학년, 4학년 각 학년들의 매칭이 이루어집니다.
+          <span className={classes.number}>2.</span> 1학년, 2학년, 3학년, 4학년 각 학년, 총 구성원 4명으로 매칭이 이루어집니다.
         </Typography>
-        <Button className={classes.randomMatchButton} fullWidth color="primary" size="large" onClick={randomMatch} variant="outlined">
+        <Typography gutterBottom align="left">
+          <span className={classes.number}>3.</span> 가장 적은 인원으로 구성된 매칭방을 우선순위로 두었습니다.
+        </Typography>
+
+        <Button className={classes.randomMatchButton} fullWidth size="large" onClick={randomMatch} variant="outlined">
           <Typography>매칭 시작하기</Typography>
         </Button>
       </Paper>

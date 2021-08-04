@@ -14,6 +14,7 @@ const styles = (theme) => ({
   joinWarapper: { height: 'calc(100% - 56px)' },
   joinButton: {
     padding: theme.spacing(2),
+    color: theme.palette.primary.dark,
   },
   messagesWrapper: {
     overflowY: 'scroll',
@@ -128,7 +129,7 @@ class ActiveChatPage extends Component {
             </Typography>
           </Grid>
           <div className={classes.messageInputWrapper}>
-            <Button className={classes.joinButton} fullWidth color="primary" size="large" onClick={joinChat}>
+            <Button className={classes.joinButton} fullWidth size="large" onClick={joinChat}>
               <Typography>채팅 참여하기</Typography>
             </Button>
           </div>

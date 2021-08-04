@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+# FUN & BUN
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+코로나 사태로 인한 비대면 수업으로, 학교 생활에 대한 정보를 얻기 어려운 학생들에게 학과 선후배 간 연결을 통해 정보 교류 및 소통 할 수 있는 환경을 제공해주는 랜덤 매칭 및 그룹채팅 서비스 입니다.
 
-## Available Scripts
+## Stack
 
-In the project directory, you can run:
+- React JS
+- Node JS (Express)
+- MongoDB / Mongoose
+- Material UI Front libraries
+- JSON web tokens
+- Axios for API requests
+- Websockets (socket.io) for real-time
 
-### `npm start`
+## Features && Progress
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 사용자 계정
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [x] 로그인
+- [x] 회원가입
+- [x] 로그아웃
+- [x] JSON web tokens 을 이용한 사용자 생성 및 인증
+- [ ] 이메일 인증
+- [ ] 비밀번호 분실 및 변경
+- [ ] 프로필 편집
 
-### `npm test`
+### 그룹 채팅
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [x] 그룹 생성
+- [x] 그룹 가입
+- [x] 그룹 나가기
+- [x] 그룹 자동 삭제
+- [x] 그룹 정보 보기
+- [x] 그룹 검색
+- [ ] 그룹 정보 편집
+- [ ] 그룹 채팅 나간 후 입장 제한
 
-### `npm run build`
+### 랜덤 매칭
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [x] 랜덤 매칭 알고리즘
+- [ ] 추가 구성원, 메시지 알림
+- [ ] 랜덤 매칭 나가기(2회)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### UI
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [x] 반응형 레이아웃
 
-### `npm run eject`
+자세한 내용은 아래에서 확인해주세요.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Screenshot
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Login & Register
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+입력 유효성 검사를 위한 즉각적인 피드백으로 사용자 입력을 보호합니다.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<img src="./images/Register.PNG"  title="Register" alt="Register"></img>
 
-## Learn More
+<p align=center><i>회원가입 화면</i></p>
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+사용자를 생성하기 전 다음을 포함한 여러 검사가 백그라운드에서 실행됩니다.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- 이미 존재하는 사용자인지 확인
+- 이미 사용하는 이메일인지 확인
+- 입력이 올바른 형식인지 확인
 
-### Code Splitting
+### Group Chat
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+<img src="./images/MyChat.PNG" title="Main" alt="Main"></img>
 
-### Analyzing the Bundle Size
+<p align=center><i>나의 채팅 화면</i></p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+사용자가 참여한 채팅을 확인할 수 있습니다.  
+오른 쪽 상단의 사람 아이콘을 클릭하면 채팅의 정보를 확인 할 수 있으며, 채팅 제목 옆의 아이콘을 클릭하면 채팅방을 떠날 수 있습니다.  
+채팅방의 인원이 존재하지 않을 경우 자동 삭제 됩니다.
 
-### Making a Progressive Web App
+<img src="./images/CreateChat.PNG" title="CreateChat" alt="CreateChat"></img>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+<p align=center><i>채팅 생성 화면</i></p>
 
-### Advanced Configuration
+검색 옆의 '+' 기호를 클릭하면 채팅을 생성할 수 있습니다.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+<img src="./images/Explore.PNG" title="Explore" alt="Explore"></img>
 
-### Deployment
+<p align=center><i>모든 채팅 화면</i></p>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+존재하는 모든 채팅을 확인할 수 있으며, 찾고 있는 채팅방을 검색할 수 있습니다.
 
-### `npm run build` fails to minify
+### RandomMatch
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+<img src="./images/MatchManual.PNG" title="MatchManual" alt="MatchManual"></img>
+
+<p align=center><i>매칭 시작하기 화면</i></p>
+
+오른쪽 매칭시작하기 버튼을 클릭하면 위와 같은 화면을 볼 수 있습니다.  
+매칭은 다음과 같이 이루어집니다.
+
+- 같은 학과의 학생들끼리
+- 1학년, 2학년, 3학년, 4학년 각 학년의 1명씩 총 4명
+- 우선순위 : 가장 적은 인원의 방, 가장 오래전에 만들어진 방
+
+<img src="./images/Match.PNG" title="Match" alt="Match"></img>
+
+<p align=center><i>매칭 완료 화면</i></p>
+
+매칭이 완료되면 위와 같은 화면을 볼 수 있습니다.  
+매칭 시작하기 버튼은 학과 이름으로 변경되며, 그룹채팅과 마찬가지로 매칭의 정보를 확인할 수 있습니다.
+
+### Responsive design
+
+<img src="./images/UI.PNG" width="300px" height="350px"  title="UI" alt="UI"></img>
+<img src="./images/UI2.PNG" width="300px" height="350px"  title="UI2" alt="UI2"></img>
+<img src="./images/UI3.PNG" width="300px" height="350px"  title="UI3" alt="UI3"></img>
