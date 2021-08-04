@@ -7,7 +7,7 @@
 - React JS
 - Node JS (Express)
 - MongoDB / Mongoose
-- Material UI Front libraries
+- Material UI
 - JSON web tokens
 - Axios for API requests
 - Websockets (socket.io) for real-time
