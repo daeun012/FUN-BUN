@@ -8,7 +8,7 @@ export function socketConnect(token) {
   return (dispatch) => {
     dispatch({ type: types.SOCKET_CONNECTION });
 
-    socket = io('http://localhost:3000/', { query: { token } });
+    socket = io('ws://localhost:3000', { query: { token } });
     socket.on('connect', () => {
       dispatch({ type: types.SOCKET_CONNECTION_SUCCESS });
     });
